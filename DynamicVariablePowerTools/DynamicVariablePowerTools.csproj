@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyTitle>DynamicVariablePowerTools</AssemblyTitle>
+    <AssemblyFileName>$(AssemblyTitle).dll</AssemblyFileName>
+    <RootNamespace>DynamicVariablePowerTools</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>DynamicVariablePowerTools</PackageId>
+    <Title>Dynamic Variable Power Tools</Title>
+    <Authors>Banane9</Authors>
+    <Version>0.1.0-beta</Version>
+    <Description>This MonkeyLoader mod for Resonite adds a variety of powerful functions to dynamic variables and their spaces.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ResoniteModdingGroup/DynamicVariablePowerTools</PackageProjectUrl>
+    <PackageTags>mod; mods; monkeyloader; resonite; contacts</PackageTags>
+  </PropertyGroup>
+
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy Condition="'$(CopyToLibraries)'=='true'" SourceFiles="$(OutputPath)..\$(PackageId).$(PackageVersion).nupkg" DestinationFiles="$(ResonitePath)\MonkeyLoader\Mods\$(PackageId).nupkg" />
+    <Message Condition="'$(CopyToLibraries)'=='true'" Text="Copied '$(OutputPath)..\$(PackageId).$(PackageVersion).nupkg' to '$(ResonitePath)\MonkeyLoader\Mods\$(PackageId).nupkg'" Importance="high" />
+  </Target>
+  
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="" />
+    <None Include="Locale\*" Pack="true" PackagePath="content/Locale/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonkeyLoader.GamePacks.Resonite" Version="0.21.2-beta" />
+    <PackageReference Include="PolySharp" Version="1.15.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Resonite.Elements.Core" Version="1.4.3" />
+    <PackageReference Include="Resonite.Elements.Quantity" Version="1.2.3" />
+    <PackageReference Include="Resonite.FrooxEngine" Version="2025.1.12.1412" />
+    <PackageReference Include="Resonite.ProtoFluxBindings" Version="2025.3.9.1412" />
+  </ItemGroup>
+</Project>
