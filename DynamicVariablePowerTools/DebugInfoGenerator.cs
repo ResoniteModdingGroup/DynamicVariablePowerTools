@@ -2,22 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using FrooxEngine;
-using FrooxEngine.UIX;
+using MonkeyLoader.Resonite;
 using MonkeyLoader.Resonite.UI;
 
 namespace DynamicVariablePowerTools
 {
-    internal sealed class DynVarSpaceTree : ResoniteInspectorMonkey<DynVarSpaceTree, BuildInspectorBodyEvent, DynamicVariableSpace>
+    internal sealed class DebugInfoGenerator : ConfiguredResoniteInspectorMonkey<DebugInfoGenerator, DebugInfoConfig, BuildInspectorBodyEvent, DynamicVariableSpace>
     {
-        //[AutoRegisterConfigKey]
-        //private static readonly ModConfigurationKey<bool> EnableLinkedVariablesList = new("EnableLinkedVariablesList", "Allow generating a list of dynamic variable definitions for a space.", () => true);
+        /// <inheritdoc/>
+        public override bool CanBeDisabled => true;
 
-        //[AutoRegisterConfigKey]
-        //private static readonly ModConfigurationKey<bool> EnableVariableHierarchy = new("EnableVariableHierarchy", "Allow generating a hierarchy of dynamic variable components for a space.", () => true);
-
+        /// <inheritdoc/>
         public override int Priority => -HarmonyLib.Priority.High;
 
         /// <inheritdoc/>
@@ -28,16 +25,22 @@ namespace DynamicVariablePowerTools
 
             var outputField = ui.Current.AttachComponent<ValueField<string>>();
 
-            //if (Config.GetValue(EnableLinkedVariablesList))
-            ui.LocalActionButton("Output names of linked Variables", _ => OutputVariableNames(space, outputField.Value));
+            if (ConfigSection.EnableLinkedVariablesList)
+            {
+                ui.LocalActionButton(Mod.GetLocaleString("EnableLinkedVariablesList.Button"), _ => OutputLinkedVariables(space, outputField.Value))
+                    .WithTooltip(Mod.GetLocaleString("EnableLinkedVariablesList.Tooltip"));
+            }
 
-            //if (Config.GetValue(EnableVariableHierarchy))
-            ui.LocalActionButton("Output tree of linked Variable Hierarchy", _ => OutputVariableHierarchy(space, outputField.Value));
+            if (ConfigSection.EnableLinkedComponentHierarchy)
+            {
+                ui.LocalActionButton(Mod.GetLocaleString("EnableLinkedComponentHierarchy.Button"), _ => OutputComponentHierarchy(space, outputField.Value))
+                    .WithTooltip(Mod.GetLocaleString("EnableLinkedComponentHierarchy.Tooltip"));
+            }
 
             SyncMemberEditorBuilder.Build(outputField.Value, "Output", outputField.GetSyncMemberFieldInfo("Value"), ui);
         }
 
-        private static void OutputVariableHierarchy(DynamicVariableSpace space, Sync<string> target)
+        private static void OutputComponentHierarchy(DynamicVariableSpace space, Sync<string> target)
         {
             space.StartTask(async () =>
             {
@@ -52,9 +55,9 @@ namespace DynamicVariablePowerTools
             });
         }
 
-        private static void OutputVariableNames(DynamicVariableSpace space, Sync<string> target)
+        private static void OutputLinkedVariables(DynamicVariableSpace space, Sync<string> target)
         {
-            var names = new StringBuilder("Variables linked to Namespace ");
+            var names = new StringBuilder($"Variables linked to Namespace [{space.SpaceName}] on {space.Slot.Name}");
             names.Append(space.SpaceName);
             names.AppendLine(":");
 

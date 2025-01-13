@@ -9,9 +9,9 @@ using MonkeyLoader.Resonite;
 
 namespace DynamicVariablePowerTools
 {
-    [HarmonyPatchCategory(nameof(RenameDirectlyLinkedDynVars))]
+    [HarmonyPatchCategory(nameof(RenameDirectlyLinkedVariables))]
     [HarmonyPatch(typeof(DynamicVariableSpace), nameof(DynamicVariableSpace.UpdateName))]
-    internal sealed class RenameDirectlyLinkedDynVars : ResoniteMonkey<RenameDirectlyLinkedDynVars>
+    internal sealed class RenameDirectlyLinkedVariables : ResoniteMonkey<RenameDirectlyLinkedVariables>
     {
         //[AutoRegisterConfigKey]
         //private static ModConfigurationKey<bool> ChangeDynVarNamespaces = new ModConfigurationKey<bool>("ChangeDynVarNamespaces", "Enable searching and renaming directly linked variables and drivers when namespace changes.", () => false);

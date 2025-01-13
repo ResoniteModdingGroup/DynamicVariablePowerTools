@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FrooxEngine;
-using HarmonyLib;
 
 namespace DynamicVariablePowerTools
 {
@@ -32,7 +31,10 @@ namespace DynamicVariablePowerTools
 
         public override string ToString()
         {
-            var builder = new StringBuilder(_space.Slot.Name).Append(": Namespace ").AppendLine(_space.SpaceName);
+            var builder = new StringBuilder("Hierarchy of linked dynamic variable components of Namespace [")
+                .Append(_space.SpaceName)
+                .Append("] on ")
+                .AppendLine(_space.Slot.Name);
 
             BuildString(builder, "");
             builder.Remove(builder.Length - Environment.NewLine.Length, Environment.NewLine.Length);
