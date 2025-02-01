@@ -29,6 +29,7 @@ namespace DynamicVariablePowerTools
             __instance.Slot.ForeachComponentInChildren<IDynamicVariable>(dynVar =>
             {
                 DynamicVariableHelper.ParsePath(dynVar.VariableName, out var spaceName, out var variableName);
+
                 if (spaceName == null || Traverse.Create(dynVar).Field("handler").Field("_currentSpace").GetValue() != __instance)
                     return;
 
@@ -42,7 +43,7 @@ namespace DynamicVariablePowerTools
                     return;
                 }
 
-                if ((dynVar as ProtoFluxEngineProxy).Node.Target is IProtoFluxNode dynVarNode
+                if (dynVar is ProtoFluxEngineProxy { Node.Target: IProtoFluxNode dynVarNode }
                   && dynVarNode.TryGetField("VariableName") is SyncRef<IGlobalValueProxy<string>> nameProxyRef
                   && nameProxyRef.Target is GlobalValue<string> nameProxy)
                 {

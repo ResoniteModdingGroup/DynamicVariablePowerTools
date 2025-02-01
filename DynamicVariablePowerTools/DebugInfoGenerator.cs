@@ -6,6 +6,7 @@ using System.Text;
 using FrooxEngine;
 using MonkeyLoader.Resonite;
 using MonkeyLoader.Resonite.UI;
+using MonkeyLoader.Resonite.UI.Inspectors;
 
 namespace DynamicVariablePowerTools
 {
@@ -57,21 +58,28 @@ namespace DynamicVariablePowerTools
 
         private static void OutputLinkedVariables(DynamicVariableSpace space, Sync<string> target)
         {
-            var names = new StringBuilder($"Variables linked to Namespace [{space.SpaceName}] on {space.Slot.Name}");
-            names.Append(space.SpaceName);
-            names.AppendLine(":");
-
-            foreach (var identity in space._dynamicValues.Keys)
+            space.StartTask(async () =>
             {
-                names.Append(identity.name);
-                names.Append(" (");
-                names.AppendTypeName(identity.type);
-                names.AppendLine(")");
-            }
+                await default(ToBackground);
 
-            names.Remove(names.Length - Environment.NewLine.Length, Environment.NewLine.Length);
+                var names = new StringBuilder($"Variables linked to Namespace [{space.SpaceName}] on {space.Slot.Name}");
+                names.Append(space.SpaceName);
+                names.AppendLine(":");
 
-            target.Value = names.ToString();
+                foreach (var identity in space._dynamicValues.Keys)
+                {
+                    names.Append(identity.name);
+                    names.Append(" (");
+                    names.AppendTypeName(identity.type);
+                    names.AppendLine(")");
+                }
+
+                names.Remove(names.Length - Environment.NewLine.Length, Environment.NewLine.Length);
+
+                await default(ToWorld);
+
+                target.Value = names.ToString();
+            });
         }
     }
 }
