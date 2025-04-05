@@ -35,6 +35,7 @@ namespace DynamicVariablePowerTools
 
                 var newVariableName = $"{newName}/{variableName}";
 
+                // TODO: Move to helper method
                 var nameField = ((Worker)dynVar).TryGetField<string>("VariableName") ?? ((Worker)dynVar).TryGetField<string>("_variableName");
 
                 if (nameField is not null)
