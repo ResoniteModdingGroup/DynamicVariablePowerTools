@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Elements.Core;
 using FrooxEngine;
 
 namespace DynamicVariablePowerTools
@@ -22,7 +23,7 @@ namespace DynamicVariablePowerTools
 
         public bool Process()
         {
-            _dynVars = [.. _slot.GetComponents<IDynamicVariable>(IsLinkedToThisSpace)];
+            _dynVars = [.. _slot.GetComponents<IDynamicVariable>(dynvar => dynvar.IsLinkedToSpace(_space))];
 
             _children = _slot.Children.Select(child => new SpaceTree(_space, child)).Where(tree => tree.Process()).ToArray();
 
@@ -48,7 +49,7 @@ namespace DynamicVariablePowerTools
             builder.Append(last ? "└─" : "├─");
             builder.Append(dynVar.VariableName);
             builder.Append(" (");
-            builder.AppendTypeName(dynVar.GetType());
+            builder.Append(dynVar.GetType().GetNiceName());
             builder.AppendLine(")");
         }
 
@@ -89,8 +90,5 @@ namespace DynamicVariablePowerTools
                     AppendSlot(builder, indent, _children[i], i == 0, i == _children.Length - 1);
             }
         }
-
-        private bool IsLinkedToThisSpace(IDynamicVariable dynamicVariable)
-            => dynamicVariable.IsLinkedToSpace(_space);
     }
 }

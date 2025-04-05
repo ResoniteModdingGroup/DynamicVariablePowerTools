@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Elements.Core;
 using FrooxEngine;
 using MonkeyLoader.Resonite;
 using MonkeyLoader.Resonite.UI;
@@ -70,7 +71,7 @@ namespace DynamicVariablePowerTools
                 {
                     names.Append(identity.name);
                     names.Append(" (");
-                    names.AppendTypeName(identity.type);
+                    names.Append(identity.type.GetNiceName());
                     names.AppendLine(")");
                 }
 

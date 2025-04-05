@@ -1,17 +1,22 @@
 {
-  "localeCode": "en",
-  "authors": [ "Banane9" ],
-  "messages": {
-    "DynamicVariablePowerTools.EnableLinkedVariablesList.Name": "Variable Definitions",
-    "DynamicVariablePowerTools.EnableLinkedVariablesList.Description": "Allow generating a list of all dynamic variable definitions linked to a space.",
-    "DynamicVariablePowerTools.EnableLinkedVariablesList.Button": "Output Variable Definitions",
-    "DynamicVariablePowerTools.EnableLinkedVariablesList.Tooltip": "Generates a list of all dynamic variable definitions linked to this space in the <i>Output</i> field.",
+    "localeCode": "en",
+    "authors": [ "Banane9" ],
+    "messages": {
+        "DynamicVariablePowerTools.EnableLinkedVariablesList.Name": "Variable Definitions",
+        "DynamicVariablePowerTools.EnableLinkedVariablesList.Description": "Allow generating a list of all dynamic variable definitions linked to a space.",
+        "DynamicVariablePowerTools.EnableLinkedVariablesList.Button": "Output Variable Definitions",
+        "DynamicVariablePowerTools.EnableLinkedVariablesList.Tooltip": "Generates a list of all dynamic variable definitions linked to this space in the <i>Output</i> field.",
 
-    "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Name": "Component Hierarchy",
-    "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Description": "Allow generating a hierarchical list of all dynamic variable components linked to a space.",
-    "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Button": "Output Component Hierarchy",
-    "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Tooltip": "Generates a hierarchical list of all dynamic variable components linked to this space in the <i>Output</i> field.",
+        "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Name": "Component Hierarchy",
+        "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Description": "Allow generating a hierarchical list of all dynamic variable components linked to a space.",
+        "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Button": "Output Component Hierarchy",
+        "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Tooltip": "Generates a hierarchical list of all dynamic variable components linked to this space in the <i>Output</i> field.",
 
-    "DynamicVariablePowerTools.DebugInfo.Name": "Debug Info"
-  }
+        "DynamicVariablePowerTools.RenameDynamicVariables.Name": "Rename Dynamic Variables",
+        "DynamicVariablePowerTools.RenameDynamicVariables.Description": "Adds a button to dynamic variables for renaming all matching linked variables.",
+        "DynamicVariablePowerTools.RenameDynamicVariables.Button": "Rename",
+        "DynamicVariablePowerTools.RenameDynamicVariables.Tooltip": "Renames all matching linked variables.",
+
+        "DynamicVariablePowerTools.DebugInfo.Name": "Debug Info"
+    }
 }
