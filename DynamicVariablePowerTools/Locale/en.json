@@ -12,10 +12,18 @@
         "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Button": "Output Component Hierarchy",
         "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Tooltip": "Generates a hierarchical list of all dynamic variable components linked to this space in the <i>Output</i> field.",
 
+        "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Name": "Rename Dynamic Variable Spaces",
+        "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Description": "Adds a button to dynamic variable spaces for renaming all linked variables.",
+        "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Button": "Rename",
+        "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Tooltip": "Renames all linked variables.",
+
         "DynamicVariablePowerTools.RenameDynamicVariables.Name": "Rename Dynamic Variables",
         "DynamicVariablePowerTools.RenameDynamicVariables.Description": "Adds a button to dynamic variables for renaming all matching linked variables.",
         "DynamicVariablePowerTools.RenameDynamicVariables.Button": "Rename",
         "DynamicVariablePowerTools.RenameDynamicVariables.Tooltip": "Renames all matching linked variables.",
+
+        "DynamicVariablePowerTools.Config.RenameOptions.Name": "Rename Options",
+        "DynamicVariablePowerTools.Config.RenameOptions.Description": "Options for how dynamic variables should be renamed.",
 
         "DynamicVariablePowerTools.DebugInfo.Name": "Debug Info"
     }
