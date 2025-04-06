@@ -1,17 +1,13 @@
 ﻿using Elements.Core;
 using FrooxEngine;
 using FrooxEngine.ProtoFlux;
-using FrooxEngine.UIX;
 using MonkeyLoader.Resonite;
-using MonkeyLoader.Resonite.UI;
 using MonkeyLoader.Resonite.UI.Inspectors;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DynamicVariablePowerTools
 {
-    internal class RenameDynamicVariables : ResoniteInspectorMonkey<RenameDynamicVariables, BuildInspectorBodyEvent>
+    internal sealed class RenameDynamicVariables : ResoniteInspectorMonkey<RenameDynamicVariables, BuildInspectorBodyEvent>
     {
         public override int Priority => HarmonyLib.Priority.Low;
 
@@ -23,22 +19,12 @@ namespace DynamicVariablePowerTools
             var dynVar = (IDynamicVariable)eventData.Worker;
             var nameField = ((Worker)dynVar).TryGetField<string>("VariableName");
 
-            var builder = eventData.UI;
-            builder.HorizontalLayout(4).Slot.DestroyWhenLocalUserLeaves();
-            builder.PushStyle();
-            var style = builder.Style;
-
-            style.FlexibleWidth = 1;
-            var newNameField = builder.TextField(dynVar.VariableName, parseRTF: false);
-            nameField.Changed += _ => newNameField.Text.Content.Value = dynVar.VariableName;
-
-            style.FlexibleWidth = -1;
-            style.MinWidth = 256;
-            builder.LocalActionButton(this.GetLocaleString("Button"), button => RenameDynVar(dynVar, newNameField.Text.Content.Value))
-                .WithTooltip(this.GetLocaleString("Tooltip"));
-
-            builder.PopStyle();
-            builder.NestOut();
+            eventData.UI.BuildRenameUI(
+                nameField,
+                onRename: newName => RenameDynVar(dynVar, newName),
+                buttonText: this.GetLocaleString("Button"),
+                tooltipText: this.GetLocaleString("Tooltip")
+            );
         }
 
         private static Type GetDynVarType(IDynamicVariable dynVar)
@@ -82,6 +68,18 @@ namespace DynamicVariablePowerTools
                     nameProxy.Value.Value = newName;
                     continue;
                 }
+            }
+
+            // Only attempt rename when the new name is directly binding ("space/name")
+            if (RenameConfig.Instance.ChangeProtoFluxStringInputs && currentSpaceName != null)
+            {
+                linkedSpace.Slot.ForeachComponentInChildren<IInput<string>>(stringInput =>
+                {
+                    if (stringInput.Value != currentFullName)
+                        return;
+
+                    stringInput.Value = newName;
+                }, includeLocal: true, cacheItems: true);
             }
         }
     }
