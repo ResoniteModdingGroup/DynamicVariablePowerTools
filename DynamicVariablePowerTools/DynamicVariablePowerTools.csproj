@@ -10,7 +10,7 @@
     <PackageId>DynamicVariablePowerTools</PackageId>
     <Title>Dynamic Variable Power Tools</Title>
     <Authors>Banane9</Authors>
-    <Version>0.1.0-beta</Version>
+    <Version>0.1.1-beta</Version>
     <Description>This MonkeyLoader mod for Resonite adds a variety of powerful functions to dynamic variables and their spaces.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>

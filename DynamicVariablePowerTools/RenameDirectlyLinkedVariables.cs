@@ -68,11 +68,12 @@ namespace DynamicVariablePowerTools
             {
                 space.Slot.ForeachComponentInChildren<IInput<string>>(stringInput =>
                 {
+                    // this eats variables like: Space/{0} - so can't construct new name from {newName}/{variableName}
                     DynamicVariableHelper.ParsePath(stringInput.Value, out var spaceName, out var variableName);
                     if (spaceName == null || spaceName != currentName)
                         return;
 
-                    stringInput.Value = $"{newName}/{variableName}";
+                    stringInput.Value = stringInput.Value.Replace(spaceName, newName);
                 }, includeLocal: true, cacheItems: true);
             }
 
