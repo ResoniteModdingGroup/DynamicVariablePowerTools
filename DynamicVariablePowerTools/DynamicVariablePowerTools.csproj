@@ -9,6 +9,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ResoniteModdingGroup/DynamicVariablePowerTools</PackageProjectUrl>
+    <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
     <PackageTags>mod; mods; monkeyloader; resonite; contacts</PackageTags>
   </PropertyGroup>
   
