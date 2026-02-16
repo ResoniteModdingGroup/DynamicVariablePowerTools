@@ -1,12 +1,6 @@
 ﻿using FrooxEngine;
 using HarmonyLib;
-using MonkeyLoader.Resonite.UI;
 using MonkeyLoader.Resonite.UI.Inspectors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DynamicVariablePowerTools
 {

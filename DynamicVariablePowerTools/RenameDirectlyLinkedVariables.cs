@@ -1,5 +1,4 @@
-﻿using System;
-using FrooxEngine;
+﻿using FrooxEngine;
 using FrooxEngine.ProtoFlux;
 using HarmonyLib;
 using MonkeyLoader.Resonite;
@@ -7,16 +6,9 @@ using MonkeyLoader.Resonite.UI.Inspectors;
 
 namespace DynamicVariablePowerTools
 {
-    [HarmonyPatchCategory(nameof(RenameDirectlyLinkedVariables))]
-    [HarmonyPatch(typeof(DynamicVariableSpace), nameof(DynamicVariableSpace.UpdateName))]
-    internal sealed class RenameDirectlyLinkedVariables : ConfiguredResoniteInspectorMonkey<RenameDirectlyLinkedVariables, RenameConfig, BuildInspectorBodyEvent, DynamicVariableSpace>
+    internal sealed class RenameDirectlyLinkedVariables
+        : ConfiguredResoniteInspectorMonkey<RenameDirectlyLinkedVariables, RenameConfig, BuildInspectorBodyEvent, DynamicVariableSpace>
     {
-        //[AutoRegisterConfigKey]
-        //private static ModConfigurationKey<bool> ChangeDynVarNamespaces = new ModConfigurationKey<bool>("ChangeDynVarNamespaces", "Enable searching and renaming directly linked variables and drivers when namespace changes.", () => false);
-
-        //[AutoRegisterConfigKey]
-        //private static ModConfigurationKey<bool> ChangeLogixStringInputs = new ModConfigurationKey<bool>("ChangeLogixStringInputs", "Search and rename logix inputs with the old name in the form OldName/.* (Experimental).", () => false);
-
         public override int Priority => HarmonyLib.Priority.Low;
 
         protected override void Handle(BuildInspectorBodyEvent eventData)

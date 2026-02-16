@@ -1,15 +1,9 @@
 ﻿using FrooxEngine;
-using FrooxEngine.UIX;
 using HarmonyLib;
 using MonkeyLoader;
 using MonkeyLoader.Resonite;
 using MonkeyLoader.Resonite.UI.Inspectors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DynamicVariablePowerTools
 {
@@ -73,18 +67,18 @@ namespace DynamicVariablePowerTools
                 var dynamicField = slot.AttachComponent<DynamicField<T>>();
                 dynamicField.TargetField.Target = (IField<T>)eventData.Target;
 
-                button.World.LocalUser.CloseContextMenu(eventData.MemberActions);
+                button.World.LocalUser.CloseContextMenu(eventData.Summoner);
             };
 
             menuItem = eventData.ContextMenu.AddItem("Drive from Dynamic Variable", (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
 
             menuItem.Button.LocalPressed += (button, args) =>
             {
-                button.World.LocalUser.CloseContextMenu(eventData.MemberActions);
+                button.World.LocalUser.CloseContextMenu(eventData.Summoner);
 
                 button.Slot.StartTask(async () =>
                 {
-                    await button.World.LocalUser.OpenContextMenu(eventData.MemberActions, args.source.Slot);
+                    await button.World.LocalUser.OpenContextMenu(eventData.Summoner, args.source.Slot);
 
                     // Need to check dynamic variable spaces hiding eachother
                     // Also use full space/varName for drive
@@ -98,7 +92,7 @@ namespace DynamicVariablePowerTools
                     {
                         var driver = slot.AttachComponent<DynamicValueVariableDriver<T>>();
                         driver.Target.Target = (IField<T>)eventData.Target;
-                        button.World.LocalUser.CloseContextMenu(eventData.MemberActions);
+                        button.World.LocalUser.CloseContextMenu(eventData.Summoner);
                     };
 
                     foreach (var option in options)
@@ -107,7 +101,7 @@ namespace DynamicVariablePowerTools
                         menuItem3.Button.LocalPressed += (button2, args2) =>
                         {
                             ((IField<T>)eventData.Target).DriveFromVariable(option.name);
-                            button.World.LocalUser.CloseContextMenu(eventData.MemberActions);
+                            button.World.LocalUser.CloseContextMenu(eventData.Summoner);
                         };
                     }
                 });

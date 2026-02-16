@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Elements.Core;
 using FrooxEngine;
+using MonkeyLoader.Resonite;
 
 namespace DynamicVariablePowerTools
 {
-    internal class SpaceTree
+    internal sealed class SpaceTree
     {
         private readonly Slot _slot;
         private readonly DynamicVariableSpace _space;
-        private SpaceTree[] _children;
-        private IDynamicVariable[] _dynVars;
+        private SpaceTree[] _children = [];
+        private IDynamicVariable[] _dynVars = [];
 
         public SpaceTree(DynamicVariableSpace space, Slot? slot = null)
         {
@@ -25,7 +22,7 @@ namespace DynamicVariablePowerTools
         {
             _dynVars = [.. _slot.GetComponents<IDynamicVariable>(dynvar => dynvar.IsLinkedToSpace(_space))];
 
-            _children = _slot.Children.Select(child => new SpaceTree(_space, child)).Where(tree => tree.Process()).ToArray();
+            _children = [.. _slot.Children.Select(child => new SpaceTree(_space, child)).Where(tree => tree.Process())];
 
             return _dynVars.Length > 0 || _children.Length > 0;
         }
@@ -43,7 +40,7 @@ namespace DynamicVariablePowerTools
             return builder.ToString();
         }
 
-        private void AppendDynVar(StringBuilder builder, string indent, IDynamicVariable dynVar, bool last = false)
+        private static void AppendDynVar(StringBuilder builder, string indent, IDynamicVariable dynVar, bool last = false)
         {
             builder.Append(indent);
             builder.Append(last ? "└─" : "├─");
@@ -53,7 +50,7 @@ namespace DynamicVariablePowerTools
             builder.AppendLine(")");
         }
 
-        private void AppendSlot(StringBuilder builder, string indent, SpaceTree child, bool first, bool last)
+        private static void AppendSlot(StringBuilder builder, string indent, SpaceTree child, bool first, bool last)
         {
             if (!first)
             {
@@ -70,21 +67,23 @@ namespace DynamicVariablePowerTools
 
         private void BuildString(StringBuilder builder, string indent)
         {
-            if (_dynVars.Any())
+            if (_dynVars.Length is not 0)
             {
                 for (var i = 0; i < _dynVars.Length - 1; ++i)
                     AppendDynVar(builder, indent, _dynVars[i]);
 
-                AppendDynVar(builder, indent, _dynVars[^1], !_children.Any());
+                var isLast = _children.Length is 0;
 
-                if (_children.Any())
+                AppendDynVar(builder, indent, _dynVars[^1], isLast);
+
+                if (!isLast)
                 {
                     builder.Append(indent);
                     builder.AppendLine("│");
                 }
             }
 
-            if (_children.Any())
+            if (_children.Length is not 0)
             {
                 for (var i = 0; i < _children.Length; ++i)
                     AppendSlot(builder, indent, _children[i], i == 0, i == _children.Length - 1);

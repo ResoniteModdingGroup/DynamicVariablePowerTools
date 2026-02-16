@@ -3,7 +3,6 @@ using FrooxEngine;
 using FrooxEngine.ProtoFlux;
 using MonkeyLoader.Resonite;
 using MonkeyLoader.Resonite.UI.Inspectors;
-using System;
 
 namespace DynamicVariablePowerTools
 {
