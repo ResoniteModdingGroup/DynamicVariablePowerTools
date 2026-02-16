@@ -43,12 +43,9 @@ jobs:
     - name: Setup Dotnet
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.x
+        dotnet-version: 10.x
         source-url: https://nuget.pkg.github.com/ResoniteModdingGroup/index.json
-    
-    - name: Add MonkeyLoader NuGet Source
-      run: dotnet nuget add source https://pkg.munally.com/MonkeyModdingTroop/index.json
-    
+        
     - name: Restore NuGet Package Cache
       uses: actions/cache/restore@v4
       with:
@@ -98,11 +95,8 @@ jobs:
     - name: Setup Dotnet
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.x
+        dotnet-version: 10.x
         source-url: https://nuget.pkg.github.com/ResoniteModdingGroup/index.json
-
-    - name: Add MonkeyLoader NuGet Source
-      run: dotnet nuget add source https://pkg.munally.com/MonkeyModdingTroop/index.json
 
     - name: Restore NuGet Package Cache
       uses: actions/cache/restore@v4
@@ -126,4 +120,4 @@ jobs:
     # If some rules are not applicable, you can disable them
     # using the --excluded-rules or --excluded-rule-ids option
     - name: Validate Package(s)
-      run: meziantou.validate-nuget-package (Get-ChildItem -Recurse "${{ env.NuGetDirectory }}" -Include *.nupkg) --excluded-rules IconMustBeSet 
+      run: meziantou.validate-nuget-package "${{ env.NuGetDirectory }}/DynamicVariablePowerTools.nupkg" --excluded-rules IconMustBeSet 

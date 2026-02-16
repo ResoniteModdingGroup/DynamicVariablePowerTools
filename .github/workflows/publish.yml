@@ -49,7 +49,7 @@ jobs:
         uses: mikepenz/action-gh-release@v1 #softprops/action-gh-release
         with:
           body: ${{steps.build_changelog.outputs.changelog}}
-          files: ${{ env.NuGetDirectory }}/*.nupkg
+          files: ${{ env.NuGetDirectory }}/DynamicVariablePowerTools.nupkg
           fail_on_unmatched_files: true
           fail_on_asset_upload_issue: true
           prerelease: ${{ contains(github.ref, '-') }} # simple check for vX.Y.Z-something
@@ -68,17 +68,11 @@ jobs:
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.x
+          dotnet-version: 10.x
           source-url: https://nuget.pkg.github.com/ResoniteModdingGroup/index.json
-
-      - name: Add MonkeyLoader NuGet Source
-        run: dotnet nuget add source https://pkg.munally.com/MonkeyModdingTroop/index.json
       
       # Publish all NuGet packages to the GitHub feed
       # Use --skip-duplicate to prevent errors if a package with the same version already exists.
       # If you retry a failed workflow, already published packages will be skipped without error.
       - name: Publish NuGet Packages
-        run: |
-          foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include *.nupkg)) {
-              dotnet nuget push $file --api-key "${{ secrets.GITHUB_TOKEN }}" --source https://nuget.pkg.github.com/ResoniteModdingGroup/index.json --skip-duplicate
-          }
+        run: dotnet nuget push "${{ env.NuGetDirectory }}/DynamicVariablePowerTools.nupkg" --api-key "${{ secrets.GITHUB_TOKEN }}" --source https://nuget.pkg.github.com/ResoniteModdingGroup/index.json --skip-duplicate
