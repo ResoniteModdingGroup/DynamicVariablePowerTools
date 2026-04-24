@@ -15,11 +15,11 @@ namespace DynamicVariablePowerTools.ContextMenu
     {
         private static readonly Dictionary<Type, Action<GenerationEvent>> _actionOfferersByType = new()
         {
-            { typeof(Type), AccessTools.MethodDelegate<Action<GenerationEvent>>(AccessTools.DeclaredMethod(typeof(DynamicVariableMemberActions), nameof(CreateTypeFieldItems))) }
+            { typeof(Type), AccessTools.MethodDelegate<Action<GenerationEvent>>(AccessTools.DeclaredMethod(typeof(DynamicVariableMemberActions), nameof(OfferTypeFieldActions))) }
         };
 
         private static readonly MethodInfo _offerFieldActionsMethod = AccessTools.DeclaredMethod(typeof(DynamicVariableMemberActions), nameof(OfferFieldActions));
-        private static readonly MethodInfo _offerSyncRefActionsMethod = AccessTools.DeclaredMethod(typeof(DynamicVariableMemberActions), nameof(CreateSyncRefItems));
+        private static readonly MethodInfo _offerSyncRefActionsMethod = AccessTools.DeclaredMethod(typeof(DynamicVariableMemberActions), nameof(OfferSyncRefActions));
 
         public override bool CanBeDisabled => true;
 

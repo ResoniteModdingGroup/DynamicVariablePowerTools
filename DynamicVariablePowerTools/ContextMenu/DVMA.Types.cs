@@ -7,54 +7,115 @@ namespace DynamicVariablePowerTools.ContextMenu
 {
     internal sealed partial class DynamicVariableMemberActions
     {
-        private static void CreateTypeFieldItems(GenerationEvent eventData)
-        {
-            if (eventData.Target is not SyncType syncTypeTarget)
-                return;
+        private static ButtonEventHandler GetDriveTypeFieldFromVariable(GenerationEvent eventData, SyncType syncTypeTarget, string variable)
+             => (button, args) =>
+             {
+                 syncTypeTarget.DriveFromVariable(variable);
+                 eventData.CloseContextMenu();
+             };
 
-            var menuItem = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source", "type", "DynamicTypeField"), SourceIcon, SourceColor);
-
-            menuItem.Button.LocalPressed += (sender, args) =>
+        private static ButtonEventHandler GetOfferTypeFieldDriveActions(GenerationEvent eventData, SyncType syncTypeTarget)
+            => (button, args) =>
             {
-                var slot = eventData.Target.FindNearestParent<Slot>();
-                var dynamicReference = slot.AttachComponent<DynamicTypeField>();
-                dynamicReference.TargetField.Target = syncTypeTarget;
-
                 eventData.CloseContextMenu();
-            };
 
-            if (syncTypeTarget.IsLinked)
-                return;
-
-            menuItem = eventData.ContextMenu.AddItem(Mod.GetLocaleString("DriveFrom"), (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
-
-            menuItem.Button.LocalPressed += (button, args) =>
-            {
                 button.Slot.StartTask(async () =>
                 {
                     if (await eventData.OpenContextMenuAsync(args.source.Slot) is null)
                         return;
 
-                    var slot = eventData.Target.FindNearestParent<Slot>();
+                    eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromBlank"), DriveIcon, DriveColor)
+                        .Button.LocalPressed += GetDriveTypeFieldFromVariable(eventData, syncTypeTarget, string.Empty);
 
-                    var menuItem2 = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromBlank"), (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
-                    menuItem2.Button.LocalPressed += (button2, args2) =>
+                    foreach (var variable in GetAvailableVariableOptions<Type>(eventData.Slot!))
                     {
-                        syncTypeTarget.DriveFromVariable("");
-                        eventData.CloseContextMenu();
-                    };
-
-                    foreach (var option in slot.GetAvailableVariableIdentities<Type>())
-                    {
-                        var menuItem3 = eventData.ContextMenu.AddItem($"{option.Space.SpaceName}/{option.Name}", (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
-                        menuItem3.Button.LocalPressed += (button2, args2) =>
-                        {
-                            syncTypeTarget.DriveFromVariable($"{option.Space.SpaceName}/{option.Name}");
-                            eventData.CloseContextMenu();
-                        };
+                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromVariable", "variable", variable), DriveIcon, DriveColor)
+                            .Button.LocalPressed += GetDriveTypeFieldFromVariable(eventData, syncTypeTarget, variable);
                     }
                 });
             };
+
+        private static ButtonEventHandler GetOfferTypeFieldReferenceActions(GenerationEvent eventData, SyncType syncTypeTarget)
+            => (button, args) =>
+            {
+                eventData.CloseContextMenu();
+
+                button.Slot.StartTask(async () =>
+                {
+                    if (await eventData.OpenContextMenuAsync(args.source.Slot) is null)
+                        return;
+
+                    eventData.ContextMenu.AddItem(Mod.GetLocaleString("Reference.Blank"), ReferenceIcon, ReferenceColor)
+                        .Button.LocalPressed += GetReferenceTypeFieldForVariable(eventData, syncTypeTarget, string.Empty);
+
+                    var spaces = eventData.Slot!
+                        .GetAvailableSpaces(SpaceHasName);
+
+                    foreach (var space in spaces)
+                    {
+                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Reference.InSpace", "space", space.SpaceName), ReferenceIcon, ReferenceColor)
+                            .Button.LocalPressed += GetReferenceTypeFieldForVariable(eventData, syncTypeTarget, $"{space.SpaceName}/");
+                    }
+                });
+            };
+
+        private static ButtonEventHandler GetOfferTypeFieldSourceActions(GenerationEvent eventData, SyncType syncTypeTarget)
+            => (button, args) =>
+            {
+                eventData.CloseContextMenu();
+
+                button.Slot.StartTask(async () =>
+                {
+                    if (await eventData.OpenContextMenuAsync(args.source.Slot) is null)
+                        return;
+
+                    eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source.Blank"), SourceIcon, SourceColor)
+                        .Button.LocalPressed += GetSourceTypeFieldForVariable(eventData, syncTypeTarget, string.Empty);
+
+                    var spaces = eventData.Slot!
+                        .GetAvailableSpaces(SpaceHasName);
+
+                    foreach (var space in spaces)
+                    {
+                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source.InSpace", "space", space.SpaceName), SourceIcon, SourceColor)
+                            .Button.LocalPressed += GetSourceTypeFieldForVariable(eventData, syncTypeTarget, $"{space.SpaceName}/");
+                    }
+                });
+            };
+
+        private static ButtonEventHandler GetReferenceTypeFieldForVariable(GenerationEvent eventData, SyncType syncTypeTarget, string variable)
+            => (button, args) =>
+            {
+                var dynamicReference = syncTypeTarget.FindNearestParent<Slot>().AttachComponent<DynamicReferenceVariable<SyncType>>();
+                dynamicReference.VariableName.Value = variable;
+                dynamicReference.Reference.Target = syncTypeTarget;
+
+                eventData.CloseContextMenu();
+            };
+
+        private static ButtonEventHandler GetSourceTypeFieldForVariable(GenerationEvent eventData, SyncType syncTypeTarget, string variable)
+            => (button, args) =>
+            {
+                syncTypeTarget.SyncWithVariable(variable);
+                eventData.CloseContextMenu();
+            };
+
+        private static void OfferTypeFieldActions(GenerationEvent eventData)
+        {
+            if (eventData.Target is not SyncType syncTypeTarget)
+                return;
+
+            if (!syncTypeTarget.IsLinked)
+            {
+                eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive"), DriveIcon, DriveColor)
+                    .Button.LocalPressed += GetOfferTypeFieldDriveActions(eventData, syncTypeTarget);
+            }
+
+            eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source", "type", "DynamicTypeField"), SourceIcon, SourceColor)
+                .Button.LocalPressed += GetOfferTypeFieldSourceActions(eventData, syncTypeTarget);
+
+            eventData.ContextMenu.AddItem(Mod.GetLocaleString("Reference"), ReferenceIcon, ReferenceColor)
+                .Button.LocalPressed += GetOfferTypeFieldReferenceActions(eventData, syncTypeTarget);
         }
     }
 }

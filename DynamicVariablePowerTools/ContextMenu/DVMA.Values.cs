@@ -48,7 +48,7 @@ namespace DynamicVariablePowerTools.ContextMenu
                     eventData.ContextMenu.AddItem(Mod.GetLocaleString("Reference.Blank"), ReferenceIcon, ReferenceColor)
                         .Button.LocalPressed += GetReferenceFieldForVariable(eventData, fieldTarget, string.Empty);
 
-                    var spaces = eventData.Target.FindNearestParent<Slot>()
+                    var spaces = eventData.Slot!
                         .GetAvailableSpaces(SpaceHasName);
 
                     foreach (var space in spaces)
@@ -72,7 +72,7 @@ namespace DynamicVariablePowerTools.ContextMenu
                     eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source.Blank"), SourceIcon, SourceColor)
                         .Button.LocalPressed += GetSourceFieldForVariable(eventData, fieldTarget, string.Empty);
 
-                    var spaces = eventData.Target.FindNearestParent<Slot>()
+                    var spaces = eventData.Slot!
                         .GetAvailableSpaces(SpaceHasName);
 
                     foreach (var space in spaces)
