@@ -14,8 +14,10 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <None Include="..\README.md" Pack="true" PackagePath="" />
-    <None Include="Locale\*" Pack="true" PackagePath="content/Locale/" />
+    <None Include="../README.md" Pack="true" PackagePath="" />
+    <None Include="Locale/*" Pack="true" PackagePath="content/Locale/" />
+
+    <Compile Update="ContextMenu/DVMA.*.cs" DependentUpon="ContextMenu/DynamicVariableMemberActions.cs" />
   </ItemGroup>
 
   <ItemGroup>
