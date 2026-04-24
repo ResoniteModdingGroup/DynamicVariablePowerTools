@@ -27,11 +27,16 @@
 
     "DynamicVariablePowerTools.DebugInfo.Name": "Debug Info",
 
-    "DynamicVariablePowerTools.Source": "Set up <i>{type}</i>",
-    "DynamicVariablePowerTools.Source.FromBlank": "[Blank]",
-    "DynamicVariablePowerTools.Source.InSpace": "In space <i>{space}</i>",
-    "DynamicVariablePowerTools.Reference": "Set up Reference Variable",
     "DynamicVariablePowerTools.Drive": "Drive from Dynamic Variable",
-    "DynamicVariablePowerTools.Drive.FromBlank": "[Blank]"
+    "DynamicVariablePowerTools.Drive.FromBlank": "From [Blank]",
+    "DynamicVariablePowerTools.Drive.FromVariable": "From <i>{variable}</i>",
+
+    "DynamicVariablePowerTools.Source": "Set up <i>{type}</i>",
+    "DynamicVariablePowerTools.Source.Blank": "[Blank]",
+    "DynamicVariablePowerTools.Source.InSpace": "In space <i>{space}</i>",
+
+    "DynamicVariablePowerTools.Reference": "Set up Reference Variable",
+    "DynamicVariablePowerTools.Reference.Blank": "[Blank]",
+    "DynamicVariablePowerTools.Reference.InSpace": "In space <i>{space}</i>"
   }
 }
