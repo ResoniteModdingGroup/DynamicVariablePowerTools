@@ -1,4 +1,5 @@
 ﻿using FrooxEngine;
+using FrooxEngine.UIX;
 using HarmonyLib;
 using MonkeyLoader;
 using MonkeyLoader.Resonite;
@@ -7,22 +8,24 @@ using System.Reflection;
 
 namespace DynamicVariablePowerTools
 {
-    internal sealed class SetupVariableMemberActions
-        : ResoniteAsyncEventHandlerMonkey<SetupVariableMemberActions, InspectorMemberActionsMenuItemsGenerationEvent>
+    internal sealed class SourceVariableMemberActions
+        : ResoniteAsyncEventHandlerMonkey<SourceVariableMemberActions, InspectorMemberActionsMenuItemsGenerationEvent>
     {
-        private static readonly MethodInfo _createFieldItemsMethod = AccessTools.DeclaredMethod(typeof(SetupVariableMemberActions), nameof(CreateFieldItems));
-        private static readonly MethodInfo _createSyncRefItemsMethod = AccessTools.DeclaredMethod(typeof(SetupVariableMemberActions), nameof(CreateSyncRefItems));
+        private static readonly MethodInfo _createFieldItemsMethod = AccessTools.DeclaredMethod(typeof(SourceVariableMemberActions), nameof(CreateFieldItems));
+        private static readonly MethodInfo _createSyncRefItemsMethod = AccessTools.DeclaredMethod(typeof(SourceVariableMemberActions), nameof(CreateSyncRefItems));
 
         private static readonly Dictionary<Type, Action<InspectorMemberActionsMenuItemsGenerationEvent>> _itemCreatorsByType = new()
         {
-            { typeof(Type), AccessTools.MethodDelegate<Action<InspectorMemberActionsMenuItemsGenerationEvent>>(AccessTools.DeclaredMethod(typeof(SetupVariableMemberActions), nameof(CreateTypeFieldItems))) }
+            { typeof(Type), AccessTools.MethodDelegate<Action<InspectorMemberActionsMenuItemsGenerationEvent>>(AccessTools.DeclaredMethod(typeof(SourceVariableMemberActions), nameof(CreateTypeFieldItems))) }
         };
 
         public override bool CanBeDisabled => true;
+
         public override int Priority => HarmonyLib.Priority.Normal;
 
         protected override bool AppliesTo(InspectorMemberActionsMenuItemsGenerationEvent eventData)
-            => base.AppliesTo(eventData) && eventData.Target is IField;
+            // Check for existence of Slot parent to filter out fields on UserComponents etc.
+            => base.AppliesTo(eventData) && eventData.Target is IField && eventData.Target.FindNearestParent<Slot>() is not null;
 
         protected override Task Handle(InspectorMemberActionsMenuItemsGenerationEvent eventData)
         {
@@ -37,6 +40,7 @@ namespace DynamicVariablePowerTools
                     _itemCreatorsByType.Add(syncRef.TargetType, createItems);
                 }
             }
+            // This includes SyncType fields, since they're derived from SyncField<Type> and thus IField<Type>
             else if (eventData.Target is IField field)
             {
                 if (!_itemCreatorsByType.TryGetValue(field.ValueType, out createItems))
@@ -58,50 +62,82 @@ namespace DynamicVariablePowerTools
 
         private static void CreateFieldItems<T>(InspectorMemberActionsMenuItemsGenerationEvent eventData)
         {
-            var menuItem = eventData.ContextMenu.AddItem("Set up DynamicField", (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
+            if (eventData.Target is not IField<T> fieldTarget)
+                return;
+
+            var menuItem = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source", "type", "DynamicField"), OfficialAssets.Graphics.Icons.ProtoFlux.Source, RadiantUI_Constants.Sub.CYAN);
 
             menuItem.Button.LocalPressed += (button, args) =>
             {
-                // Swap to eventData.Worker when updated
-                var slot = eventData.Target.FindNearestParent<Slot>();
-                var dynamicField = slot.AttachComponent<DynamicField<T>>();
-                dynamicField.TargetField.Target = (IField<T>)eventData.Target;
-
-                button.World.LocalUser.CloseContextMenu(eventData.Summoner);
-            };
-
-            menuItem = eventData.ContextMenu.AddItem("Drive from Dynamic Variable", (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
-
-            menuItem.Button.LocalPressed += (button, args) =>
-            {
-                button.World.LocalUser.CloseContextMenu(eventData.Summoner);
+                eventData.CloseContextMenu();
 
                 button.Slot.StartTask(async () =>
                 {
-                    await button.World.LocalUser.OpenContextMenu(eventData.Summoner, args.source.Slot);
+                    if (await eventData.OpenContextMenuAsync(args.source.Slot) is null)
+                        return;
 
-                    // Need to check dynamic variable spaces hiding eachother
-                    // Also use full space/varName for drive
-                    var slot = eventData.Target.FindNearestParent<Slot>();
-                    var options = slot.GetComponentsInParents<DynamicVariableSpace>()
-                        .SelectMany(space => space._dynamicValues.Keys.Where(variable => typeof(T).IsAssignableFrom(variable.type)))
-                        .ToArray();
+                    var menuItem2 = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source.Blank"), (Uri)null!, RadiantUI_Constants.Sub.CYAN);
 
-                    var menuItem2 = eventData.ContextMenu.AddItem("Blank", (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
                     menuItem2.Button.LocalPressed += (button2, args2) =>
                     {
-                        var driver = slot.AttachComponent<DynamicValueVariableDriver<T>>();
-                        driver.Target.Target = (IField<T>)eventData.Target;
-                        button.World.LocalUser.CloseContextMenu(eventData.Summoner);
+                        fieldTarget.SyncWithVariable("");
+                        eventData.CloseContextMenu();
                     };
 
-                    foreach (var option in options)
+                    foreach (var space in eventData.Target.FindNearestParent<Slot>().GetAvailableSpaces())
                     {
-                        var menuItem3 = eventData.ContextMenu.AddItem(option.name, (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
+                        menuItem2 = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source.InSpace", "space", space.SpaceName.Value ?? "null"), (Uri)null!, RadiantUI_Constants.Sub.CYAN);
+
+                        menuItem2.Button.LocalPressed += (button2, args2) =>
+                        {
+                            var name = space.SpaceName.Value is null ? "" : $"{space.SpaceName}/";
+                            fieldTarget.SyncWithVariable(name);
+                            eventData.CloseContextMenu();
+                        };
+                    }
+                });
+            };
+
+            menuItem = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Reference"), OfficialAssets.Graphics.Icons.ProtoFlux.Reference, RadiantUI_Constants.Neutrals.LIGHT);
+
+            menuItem.Button.LocalPressed += (button, args) =>
+            {
+                var dynamicReference = fieldTarget.FindNearestParent<Slot>().AttachComponent<DynamicReferenceVariable<IField<T>>>();
+                dynamicReference.Reference.Target = fieldTarget;
+
+                eventData.CloseContextMenu();
+            };
+
+            if (fieldTarget.IsLinked)
+                return;
+
+            menuItem = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive"), OfficialAssets.Graphics.Icons.ProtoFlux.Drive, RadiantUI_Constants.Sub.PURPLE);
+
+            menuItem.Button.LocalPressed += (button, args) =>
+            {
+                eventData.CloseContextMenu();
+
+                button.Slot.StartTask(async () =>
+                {
+                    if (await eventData.OpenContextMenuAsync(args.source.Slot) is null)
+                        return;
+
+                    var slot = eventData.Target.FindNearestParent<Slot>();
+
+                    var menuItem2 = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromBlank"), (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
+                    menuItem2.Button.LocalPressed += (button2, args2) =>
+                    {
+                        fieldTarget.DriveFromVariable("");
+                        eventData.CloseContextMenu();
+                    };
+
+                    foreach (var option in slot.GetAvailableVariableIdentities<T>())
+                    {
+                        var menuItem3 = eventData.ContextMenu.AddItem($"{option.Space.SpaceName}/{option.Name}", (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
                         menuItem3.Button.LocalPressed += (button2, args2) =>
                         {
-                            ((IField<T>)eventData.Target).DriveFromVariable(option.name);
-                            button.World.LocalUser.CloseContextMenu(eventData.Summoner);
+                            fieldTarget.DriveFromVariable($"{option.Space.SpaceName}/{option.Name}");
+                            eventData.CloseContextMenu();
                         };
                     }
                 });
@@ -114,14 +150,48 @@ namespace DynamicVariablePowerTools
             if (eventData.Target is not SyncRef<T> syncRefTarget)
                 return;
 
-            var menuItem = eventData.ContextMenu.AddItem("Set up DynamicReference", (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
+            var menuItem = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source", "type", "DynamicReference"), (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
 
             menuItem.Button.LocalPressed += (sender, args) =>
             {
-                // Swap to eventData.Worker when updated
                 var slot = eventData.Target.FindNearestParent<Slot>();
                 var dynamicReference = slot.AttachComponent<DynamicReference<T>>();
                 dynamicReference.TargetReference.Target = syncRefTarget;
+
+                eventData.CloseContextMenu();
+            };
+
+            if (syncRefTarget.IsLinked)
+                return;
+
+            menuItem = eventData.ContextMenu.AddItem(Mod.GetLocaleString("DriveFrom"), (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
+
+            menuItem.Button.LocalPressed += (button, args) =>
+            {
+                button.Slot.StartTask(async () =>
+                {
+                    if (await eventData.OpenContextMenuAsync(args.source.Slot) is null)
+                        return;
+
+                    var slot = eventData.Target.FindNearestParent<Slot>();
+
+                    var menuItem2 = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromBlank"), (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
+                    menuItem2.Button.LocalPressed += (button2, args2) =>
+                    {
+                        syncRefTarget.DriveFromVariable("");
+                        eventData.CloseContextMenu();
+                    };
+
+                    foreach (var option in slot.GetAvailableVariableIdentities<T>())
+                    {
+                        var menuItem3 = eventData.ContextMenu.AddItem($"{option.Space.SpaceName}/{option.Name}", (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
+                        menuItem3.Button.LocalPressed += (button2, args2) =>
+                        {
+                            syncRefTarget.DriveFromVariable($"{option.Space.SpaceName}/{option.Name}");
+                            eventData.CloseContextMenu();
+                        };
+                    }
+                });
             };
         }
 
@@ -130,14 +200,48 @@ namespace DynamicVariablePowerTools
             if (eventData.Target is not SyncType syncTypeTarget)
                 return;
 
-            var menuItem = eventData.ContextMenu.AddItem("Set up DynamicTypeField", (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
+            var menuItem = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source", "type", "DynamicTypeField"), (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
 
             menuItem.Button.LocalPressed += (sender, args) =>
             {
-                // Swap to eventData.Worker when updated
                 var slot = eventData.Target.FindNearestParent<Slot>();
                 var dynamicReference = slot.AttachComponent<DynamicTypeField>();
                 dynamicReference.TargetField.Target = syncTypeTarget;
+
+                eventData.CloseContextMenu();
+            };
+
+            if (syncTypeTarget.IsLinked)
+                return;
+
+            menuItem = eventData.ContextMenu.AddItem(Mod.GetLocaleString("DriveFrom"), (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
+
+            menuItem.Button.LocalPressed += (button, args) =>
+            {
+                button.Slot.StartTask(async () =>
+                {
+                    if (await eventData.OpenContextMenuAsync(args.source.Slot) is null)
+                        return;
+
+                    var slot = eventData.Target.FindNearestParent<Slot>();
+
+                    var menuItem2 = eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromBlank"), (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
+                    menuItem2.Button.LocalPressed += (button2, args2) =>
+                    {
+                        syncTypeTarget.DriveFromVariable("");
+                        eventData.CloseContextMenu();
+                    };
+
+                    foreach (var option in slot.GetAvailableVariableIdentities<Type>())
+                    {
+                        var menuItem3 = eventData.ContextMenu.AddItem($"{option.Space.SpaceName}/{option.Name}", (Uri)null!, RadiantUI_Constants.Sub.PURPLE);
+                        menuItem3.Button.LocalPressed += (button2, args2) =>
+                        {
+                            syncTypeTarget.DriveFromVariable($"{option.Space.SpaceName}/{option.Name}");
+                            eventData.CloseContextMenu();
+                        };
+                    }
+                });
             };
         }
 
