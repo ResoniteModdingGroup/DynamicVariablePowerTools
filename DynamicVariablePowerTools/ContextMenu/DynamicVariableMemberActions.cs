@@ -1,22 +1,21 @@
 ﻿using FrooxEngine;
-using FrooxEngine.UIX;
 using HarmonyLib;
 using MonkeyLoader;
 using MonkeyLoader.Resonite;
 using MonkeyLoader.Resonite.UI.Inspectors;
 using System.Reflection;
 
-namespace DynamicVariablePowerTools
+namespace DynamicVariablePowerTools.ContextMenu
 {
-    internal sealed class SourceVariableMemberActions
-        : ResoniteAsyncEventHandlerMonkey<SourceVariableMemberActions, InspectorMemberActionsMenuItemsGenerationEvent>
+    internal sealed class DynamicVariableMemberActions
+        : ResoniteAsyncEventHandlerMonkey<DynamicVariableMemberActions, InspectorMemberActionsMenuItemsGenerationEvent>
     {
-        private static readonly MethodInfo _createFieldItemsMethod = AccessTools.DeclaredMethod(typeof(SourceVariableMemberActions), nameof(CreateFieldItems));
-        private static readonly MethodInfo _createSyncRefItemsMethod = AccessTools.DeclaredMethod(typeof(SourceVariableMemberActions), nameof(CreateSyncRefItems));
+        private static readonly MethodInfo _createFieldItemsMethod = AccessTools.DeclaredMethod(typeof(DynamicVariableMemberActions), nameof(CreateFieldItems));
+        private static readonly MethodInfo _createSyncRefItemsMethod = AccessTools.DeclaredMethod(typeof(DynamicVariableMemberActions), nameof(CreateSyncRefItems));
 
         private static readonly Dictionary<Type, Action<InspectorMemberActionsMenuItemsGenerationEvent>> _itemCreatorsByType = new()
         {
-            { typeof(Type), AccessTools.MethodDelegate<Action<InspectorMemberActionsMenuItemsGenerationEvent>>(AccessTools.DeclaredMethod(typeof(SourceVariableMemberActions), nameof(CreateTypeFieldItems))) }
+            { typeof(Type), AccessTools.MethodDelegate<Action<InspectorMemberActionsMenuItemsGenerationEvent>>(AccessTools.DeclaredMethod(typeof(DynamicVariableMemberActions), nameof(CreateTypeFieldItems))) }
         };
 
         public override bool CanBeDisabled => true;
