@@ -1,5 +1,5 @@
 ﻿using FrooxEngine;
-using HarmonyLib;
+using MonkeyLoader.Resonite;
 using MonkeyLoader.Resonite.UI.Inspectors;
 
 namespace DynamicVariablePowerTools
@@ -8,15 +8,17 @@ namespace DynamicVariablePowerTools
         : ResoniteInspectorMonkey<OpenLinkedDynamicVariableSpace, BuildInspectorHeaderEvent>
     {
         public override bool CanBeDisabled => true;
+
         public override int Priority => HarmonyLib.Priority.First;
 
-        // Needs to be able to handle interfaces for IDynamicVariable
-        public OpenLinkedDynamicVariableSpace() : base(typeof(DynamicVariableBase<>))
+        // Can't use generic parameter version because IDynamicVariable isn't a Worker
+        public OpenLinkedDynamicVariableSpace() : base(typeof(IDynamicVariable))
         { }
 
         protected override void Handle(BuildInspectorHeaderEvent eventData)
         {
-            if (Traverse.Create(eventData.Worker).Field("handler").Field("_currentSpace").GetValue() is not DynamicVariableSpace space)
+            // Can safely cast since the base.AppliesTo method will ensure it's an IDynamicVariable
+            if (!((IDynamicVariable)eventData.Worker).TryGetLinkedSpace(out var space))
                 return;
 
             InspectorUIHelper.BuildHeaderOpenParentButtons(eventData.UI, space);
