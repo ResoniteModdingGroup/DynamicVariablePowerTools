@@ -2,42 +2,58 @@
   "localeCode": "en",
   "authors": [ "Banane9" ],
   "messages": {
-    "DynamicVariablePowerTools.EnableLinkedVariablesList.Name": "Variable Definitions",
-    "DynamicVariablePowerTools.EnableLinkedVariablesList.Description": "Allow generating a list of all dynamic variable definitions linked to a space.",
+    "DynamicVariablePowerTools.Name": "Dynamic Variable Power Tools",
+    "DynamicVariablePowerTools.Description": "This mod adds a variety of powerful functions to dynamic variables and their spaces.",
+
+    "DynamicVariablePowerTools.DebugInfoGenerator.Name": "Debug Info Generator",
+    "DynamicVariablePowerTools.DebugInfoGenerator.Description": "Adds buttons to DynamicVariableSpace components in inspectors based on the <i>Debug Info</i> settings that allow generating debug information for the space.",
+
+    "DynamicVariablePowerTools.OpenLinkedDynamicVariableSpace.Name": "Open Linked DynamicVariableSpace",
+    "DynamicVariablePowerTools.OpenLinkedDynamicVariableSpace.Description": "Adds buttons to the header of linked dynamic variable components in inspectors that allow opening the space they're linked to.",
+
+    "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Name": "Rename Dynamic Variable Spaces",
+    "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Description": "Adds a button to DynamicVariableSpace components in inspectors that allows renaming the space together with all linked variables.",
+
+    "DynamicVariablePowerTools.RenameDynamicVariables.Name": "Rename Dynamic Variables",
+    "DynamicVariablePowerTools.RenameDynamicVariables.Description": "Adds a button to dynamic variable components in inspectors that allows renaming all linked instances of that variable.",
+
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Name": "Dynamic Variable Member Actions",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Description": "Adds options to set up dynamic variable components to the Member Actions context menu for fields in inspectors.",
+
+    "DynamicVariablePowerTools.Config.RenameOptions.Name": "Renaming",
+    "DynamicVariablePowerTools.Config.RenameOptions.Description": "Options for the renaming of dynamic variables and their spaces.",
+    "DynamicVariablePowerTools.Config.RenameOptions.ChangeProtoFluxStringInputs.Name": "Change ProtoFlux String Inputs",
+    "DynamicVariablePowerTools.Config.RenameOptions.ChangeProtoFluxStringInputs.Description": "Search and rename ProtoFlux inputs with the old name in the form OldName/* (Experimental).",
+
+    "DynamicVariablePowerTools.Config.DebugInfo.Name": "Debug Info",
+    "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedVariablesList.Name": "Variable Definitions",
+    "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedVariablesList.Description": "Adds a button to DynamicVariableSpace components in inspectors that allows generating a list of all dynamic variable definitions linked to that space.",
+    "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedComponentHierarchy.Name": "Component Hierarchy",
+    "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedComponentHierarchy.Description": "Adds a button to DynamicVariableSpace components in inspectors that allows generating a hierarchical list of all dynamic variable components linked to a space.",
+
     "DynamicVariablePowerTools.EnableLinkedVariablesList.Button": "Output Variable Definitions",
     "DynamicVariablePowerTools.EnableLinkedVariablesList.Tooltip": "Generates a list of all dynamic variable definitions linked to this space in the <i>Output</i> field.",
 
-    "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Name": "Component Hierarchy",
-    "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Description": "Allow generating a hierarchical list of all dynamic variable components linked to a space.",
     "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Button": "Output Component Hierarchy",
     "DynamicVariablePowerTools.EnableLinkedComponentHierarchy.Tooltip": "Generates a hierarchical list of all dynamic variable components linked to this space in the <i>Output</i> field.",
 
-    "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Name": "Rename Dynamic Variable Spaces",
-    "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Description": "Adds a button to dynamic variable spaces for renaming all linked variables.",
-    "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Button": "Rename",
-    "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Tooltip": "Renames all linked variables.",
+    "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Button": "Rename Space",
+    "DynamicVariablePowerTools.RenameDirectlyLinkedVariables.Tooltip": "Rename this space and all linked variables.",
 
-    "DynamicVariablePowerTools.RenameDynamicVariables.Name": "Rename Dynamic Variables",
-    "DynamicVariablePowerTools.RenameDynamicVariables.Description": "Adds a button to dynamic variables for renaming all matching linked variables.",
-    "DynamicVariablePowerTools.RenameDynamicVariables.Button": "Rename",
-    "DynamicVariablePowerTools.RenameDynamicVariables.Tooltip": "Renames all matching linked variables.",
+    "DynamicVariablePowerTools.RenameDynamicVariables.Button": "Rename Variable",
+    "DynamicVariablePowerTools.RenameDynamicVariables.Tooltip": "Rename all linked instances of this variable.",
 
-    "DynamicVariablePowerTools.Config.RenameOptions.Name": "Rename Options",
-    "DynamicVariablePowerTools.Config.RenameOptions.Description": "Options for how dynamic variables should be renamed.",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Drive": "Drive from Dynamic Variable",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Drive.FromBlank": "From [Blank]",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Drive.FromSpace": "From Variable in <i>{space}</i>",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Drive.FromVariable": "{variable}",
 
-    "DynamicVariablePowerTools.DebugInfo.Name": "Debug Info",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Source": "Set up <i>{type}</i>",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Source.Blank": "[Blank]",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Source.InSpace": "In space <i>{space}</i>",
 
-    "DynamicVariablePowerTools.Drive": "Drive from Dynamic Variable",
-    "DynamicVariablePowerTools.Drive.FromBlank": "From [Blank]",
-    "DynamicVariablePowerTools.Drive.FromSpace": "From Variable in <i>{space}</i>",
-    "DynamicVariablePowerTools.Drive.FromVariable": "{variable}",
-
-    "DynamicVariablePowerTools.Source": "Set up <i>{type}</i>",
-    "DynamicVariablePowerTools.Source.Blank": "[Blank]",
-    "DynamicVariablePowerTools.Source.InSpace": "In space <i>{space}</i>",
-
-    "DynamicVariablePowerTools.Reference": "Set up Reference Variable",
-    "DynamicVariablePowerTools.Reference.Blank": "[Blank]",
-    "DynamicVariablePowerTools.Reference.InSpace": "In space <i>{space}</i>"
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Reference": "Set up Reference Variable",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Reference.Blank": "[Blank]",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Reference.InSpace": "In space <i>{space}</i>"
   }
 }
