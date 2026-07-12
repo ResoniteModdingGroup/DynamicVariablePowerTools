@@ -4,8 +4,8 @@ namespace DynamicVariablePowerTools
 {
     internal sealed class DebugInfoConfig : ConfigSection
     {
-        private static readonly DefiningConfigKey<bool> _enableLinkedComponentHierarchy = new("EnableLinkedComponentHierarchy", "Allow generating a hierarchical list of all dynamic variable components linked to a space.", () => true);
-        private static readonly DefiningConfigKey<bool> _enableLinkedVariablesList = new("EnableLinkedVariablesList", "Allow generating a list of all dynamic variable definitions linked to a space.", () => true);
+        private readonly DefiningConfigKey<bool> _enableLinkedComponentHierarchy = new("EnableLinkedComponentHierarchy", "Allow generating a hierarchical list of all dynamic variable components linked to a space.", () => true);
+        private readonly DefiningConfigKey<bool> _enableLinkedVariablesList = new("EnableLinkedVariablesList", "Allow generating a list of all dynamic variable definitions linked to a space.", () => true);
 
         public override string Description => "Contains the options for the available debug info buttons on DynamicVariableSpace Components.";
 

@@ -4,7 +4,7 @@ namespace DynamicVariablePowerTools
 {
     internal sealed class RenameConfig : SingletonConfigSection<RenameConfig>
     {
-        private static readonly DefiningConfigKey<bool> _changeProtoFluxStringInputs = new("ChangeProtoFluxStringInputs", "Search and rename ProtoFlux inputs with the old name in the form OldName/* (Experimental).", () => false);
+        private readonly DefiningConfigKey<bool> _changeProtoFluxStringInputs = new("ChangeProtoFluxStringInputs", "Search and rename ProtoFlux inputs with the old name in the form OldName/* (Experimental).", () => false);
 
         public bool ChangeProtoFluxStringInputs => _changeProtoFluxStringInputs;
 

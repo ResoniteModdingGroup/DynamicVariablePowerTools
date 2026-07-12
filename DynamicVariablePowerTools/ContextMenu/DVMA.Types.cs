@@ -26,12 +26,12 @@ namespace DynamicVariablePowerTools.ContextMenu
 
                     var blankVariableName = string.IsNullOrWhiteSpace(space.CurrentName) ? string.Empty : $"{space.CurrentName}/";
 
-                    eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(space, "")), DriveIcon, DriveColor)
+                    eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(space, "")), DriveIcon, DriveColor)
                         .Button.LocalPressed += GetDriveTypeFieldFromVariable(eventData, syncTypeTarget, blankVariableName);
 
                     foreach (var variable in space.GetVariableIdentities<Type>().RemoveSharedConfigVariables())
                     {
-                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(variable)), DriveIcon, DriveColor)
+                        eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(variable)), DriveIcon, DriveColor)
                             .Button.LocalPressed += GetDriveTypeFieldFromVariable(eventData, syncTypeTarget, variable.QualifiedName);
                     }
                 });
@@ -47,12 +47,12 @@ namespace DynamicVariablePowerTools.ContextMenu
                     if (await eventData.OpenContextMenuAsync(args.source.Slot) is null)
                         return;
 
-                    eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromBlank"), DriveIcon, DriveColor)
+                    eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive.FromBlank"), DriveIcon, DriveColor)
                         .Button.LocalPressed += GetDriveFieldFromVariable(eventData, syncTypeTarget, string.Empty);
 
                     foreach (var space in eventData.Slot!.GetAvailableSpaces())
                     {
-                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromSpace", "space", GetDisplayName(space)), DriveIcon, DriveColor)
+                        eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive.FromSpace", "space", GetDisplayName(space)), DriveIcon, DriveColor)
                             .Button.LocalPressed += GetOfferTypeFieldDriveActions(eventData, syncTypeTarget, space);
                     }
                 });
@@ -68,12 +68,12 @@ namespace DynamicVariablePowerTools.ContextMenu
                     if (await eventData.OpenContextMenuAsync(args.source.Slot) is null)
                         return;
 
-                    eventData.ContextMenu.AddItem(Mod.GetLocaleString("Reference.Blank"), ReferenceIcon, ReferenceColor)
+                    eventData.ContextMenu.AddItem(Instance.GetLocaleString("Reference.Blank"), ReferenceIcon, ReferenceColor)
                         .Button.LocalPressed += GetReferenceTypeFieldForVariable(eventData, syncTypeTarget, string.Empty);
 
                     foreach (var space in eventData.Slot!.GetAvailableSpaces(SpaceHasName))
                     {
-                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Reference.InSpace", "space", space.SpaceName), ReferenceIcon, ReferenceColor)
+                        eventData.ContextMenu.AddItem(Instance.GetLocaleString("Reference.InSpace", "space", space.SpaceName), ReferenceIcon, ReferenceColor)
                             .Button.LocalPressed += GetReferenceTypeFieldForVariable(eventData, syncTypeTarget, $"{space.SpaceName}/");
                     }
                 });
@@ -89,12 +89,12 @@ namespace DynamicVariablePowerTools.ContextMenu
                     if (await eventData.OpenContextMenuAsync(args.source.Slot) is null)
                         return;
 
-                    eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source.Blank"), SourceIcon, SourceColor)
+                    eventData.ContextMenu.AddItem(Instance.GetLocaleString("Source.Blank"), SourceIcon, SourceColor)
                         .Button.LocalPressed += GetSourceTypeFieldForVariable(eventData, syncTypeTarget, string.Empty);
 
                     foreach (var space in eventData.Slot!.GetAvailableSpaces(SpaceHasName))
                     {
-                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source.InSpace", "space", space.SpaceName), SourceIcon, SourceColor)
+                        eventData.ContextMenu.AddItem(Instance.GetLocaleString("Source.InSpace", "space", space.SpaceName), SourceIcon, SourceColor)
                             .Button.LocalPressed += GetSourceTypeFieldForVariable(eventData, syncTypeTarget, $"{space.SpaceName}/");
                     }
                 });
@@ -124,14 +124,14 @@ namespace DynamicVariablePowerTools.ContextMenu
 
             if (!syncTypeTarget.IsLinked)
             {
-                eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive"), DriveIcon, DriveColor)
+                eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive"), DriveIcon, DriveColor)
                     .Button.LocalPressed += GetOfferTypeFieldDriveSpaceActions(eventData, syncTypeTarget);
             }
 
-            eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source", "type", "DynamicTypeField"), SourceIcon, SourceColor)
+            eventData.ContextMenu.AddItem(Instance.GetLocaleString("Source", "type", "DynamicTypeField"), SourceIcon, SourceColor)
                 .Button.LocalPressed += GetOfferTypeFieldSourceActions(eventData, syncTypeTarget);
 
-            eventData.ContextMenu.AddItem(Mod.GetLocaleString("Reference"), ReferenceIcon, ReferenceColor)
+            eventData.ContextMenu.AddItem(Instance.GetLocaleString("Reference"), ReferenceIcon, ReferenceColor)
                 .Button.LocalPressed += GetOfferTypeFieldReferenceActions(eventData, syncTypeTarget);
         }
     }
