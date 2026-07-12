@@ -14,7 +14,30 @@ namespace DynamicVariablePowerTools.ContextMenu
                 eventData.CloseContextMenu();
             };
 
-        private static ButtonEventHandler GetOfferFieldDriveActions<T>(GenerationEvent eventData, IField<T> fieldTarget)
+        private static ButtonEventHandler GetOfferFieldDriveActions<T>(GenerationEvent eventData, IField<T> fieldTarget, DynamicVariableSpace space)
+            => (button, args) =>
+            {
+                eventData.CloseContextMenu();
+
+                button.Slot.StartTask(async () =>
+                {
+                    if (await eventData.OpenContextMenuAsync(args.source.Slot) is null)
+                        return;
+
+                    var blankVariableName = string.IsNullOrWhiteSpace(space.CurrentName) ? string.Empty : $"{space.CurrentName}/";
+
+                    eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(space, "")), DriveIcon, DriveColor)
+                        .Button.LocalPressed += GetDriveFieldFromVariable(eventData, fieldTarget, blankVariableName);
+
+                    foreach (var variable in space.GetVariableIdentities<T>().RemoveSharedConfigVariables())
+                    {
+                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(variable)), DriveIcon, DriveColor)
+                            .Button.LocalPressed += GetDriveFieldFromVariable(eventData, fieldTarget, variable.QualifiedName);
+                    }
+                });
+            };
+
+        private static ButtonEventHandler GetOfferFieldDriveSpaceActions<T>(GenerationEvent eventData, IField<T> fieldTarget)
             => (button, args) =>
             {
                 eventData.CloseContextMenu();
@@ -27,10 +50,10 @@ namespace DynamicVariablePowerTools.ContextMenu
                     eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromBlank"), DriveIcon, DriveColor)
                         .Button.LocalPressed += GetDriveFieldFromVariable(eventData, fieldTarget, string.Empty);
 
-                    foreach (var variable in GetAvailableVariableOptions<T>(eventData.Slot!))
+                    foreach (var space in eventData.Slot!.GetAvailableSpaces())
                     {
-                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromVariable", "variable", variable), DriveIcon, DriveColor)
-                            .Button.LocalPressed += GetDriveFieldFromVariable(eventData, fieldTarget, variable);
+                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive.FromSpace", "space", GetDisplayName(space)), DriveIcon, DriveColor)
+                            .Button.LocalPressed += GetOfferFieldDriveActions(eventData, fieldTarget, space);
                     }
                 });
             };
@@ -48,13 +71,10 @@ namespace DynamicVariablePowerTools.ContextMenu
                     eventData.ContextMenu.AddItem(Mod.GetLocaleString("Reference.Blank"), ReferenceIcon, ReferenceColor)
                         .Button.LocalPressed += GetReferenceFieldForVariable(eventData, fieldTarget, string.Empty);
 
-                    var spaces = eventData.Slot!
-                        .GetAvailableSpaces(SpaceHasName);
-
-                    foreach (var space in spaces)
+                    foreach (var space in eventData.Slot!.GetAvailableSpaces(SpaceHasName))
                     {
-                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Reference.InSpace", "space", space.SpaceName), ReferenceIcon, ReferenceColor)
-                            .Button.LocalPressed += GetReferenceFieldForVariable(eventData, fieldTarget, $"{space.SpaceName}/");
+                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Reference.InSpace", "space", space.CurrentName), ReferenceIcon, ReferenceColor)
+                            .Button.LocalPressed += GetReferenceFieldForVariable(eventData, fieldTarget, $"{space.CurrentName}/");
                     }
                 });
             };
@@ -72,13 +92,10 @@ namespace DynamicVariablePowerTools.ContextMenu
                     eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source.Blank"), SourceIcon, SourceColor)
                         .Button.LocalPressed += GetSourceFieldForVariable(eventData, fieldTarget, string.Empty);
 
-                    var spaces = eventData.Slot!
-                        .GetAvailableSpaces(SpaceHasName);
-
-                    foreach (var space in spaces)
+                    foreach (var space in eventData.Slot!.GetAvailableSpaces(SpaceHasName))
                     {
-                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source.InSpace", "space", space.SpaceName), SourceIcon, SourceColor)
-                            .Button.LocalPressed += GetSourceFieldForVariable(eventData, fieldTarget, $"{space.SpaceName}/");
+                        eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source.InSpace", "space", space.CurrentName), SourceIcon, SourceColor)
+                            .Button.LocalPressed += GetSourceFieldForVariable(eventData, fieldTarget, $"{space.CurrentName}/");
                     }
                 });
             };
@@ -108,7 +125,7 @@ namespace DynamicVariablePowerTools.ContextMenu
             if (!fieldTarget.IsLinked)
             {
                 eventData.ContextMenu.AddItem(Mod.GetLocaleString("Drive"), DriveIcon, DriveColor)
-                    .Button.LocalPressed += GetOfferFieldDriveActions(eventData, fieldTarget);
+                    .Button.LocalPressed += GetOfferFieldDriveSpaceActions(eventData, fieldTarget);
             }
 
             eventData.ContextMenu.AddItem(Mod.GetLocaleString("Source", "type", "DynamicField"), SourceIcon, SourceColor)

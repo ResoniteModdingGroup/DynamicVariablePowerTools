@@ -29,7 +29,8 @@
 
     "DynamicVariablePowerTools.Drive": "Drive from Dynamic Variable",
     "DynamicVariablePowerTools.Drive.FromBlank": "From [Blank]",
-    "DynamicVariablePowerTools.Drive.FromVariable": "From <i>{variable}</i>",
+    "DynamicVariablePowerTools.Drive.FromSpace": "From Variable in <i>{space}</i>",
+    "DynamicVariablePowerTools.Drive.FromVariable": "{variable}",
 
     "DynamicVariablePowerTools.Source": "Set up <i>{type}</i>",
     "DynamicVariablePowerTools.Source.Blank": "[Blank]",

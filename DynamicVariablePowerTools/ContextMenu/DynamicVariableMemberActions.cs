@@ -71,18 +71,16 @@ namespace DynamicVariablePowerTools.ContextMenu
             return Task.CompletedTask;
         }
 
-        private static IEnumerable<string> GetAvailableVariableOptions<T>(Slot slot)
-        {
-            foreach (var identity in slot.GetAvailableVariableIdentities<T>())
-            {
-                if (identity.Name.StartsWith(SharedConfig.Identifier))
-                    continue;
+        private static string GetDisplayName(DynamicVariableSpace space)
+            => $"<color=neutrals.midlight>{(string.IsNullOrWhiteSpace(space.CurrentName) ? "<i>null</i>" : space.CurrentName)}</color>";
 
-                yield return !string.IsNullOrWhiteSpace(identity.Space.CurrentName)
-                    ? $"{identity.Space.CurrentName}/{identity.Name}"
-                    : identity.Name;
-            }
-        }
+        private static string GetDisplayName(DynamicVariableSpace space, string variableName)
+            => string.IsNullOrWhiteSpace(space.CurrentName)
+                ? variableName
+                : $"<size=75%><color=neutrals.midlight>{space.CurrentName}/</color></size>{variableName}";
+
+        private static string GetDisplayName(DynamicVariableIdentity variableIdentity)
+            => GetDisplayName(variableIdentity.Space, variableIdentity.Name);
 
         private static Action<GenerationEvent> MakeMethod(MethodInfo method, Type type)
         {
