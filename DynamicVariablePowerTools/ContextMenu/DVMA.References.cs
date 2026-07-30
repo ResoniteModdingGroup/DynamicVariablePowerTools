@@ -1,17 +1,41 @@
-﻿using FrooxEngine;
+﻿using EnumerableToolkit;
+using FrooxEngine;
+using HarmonyLib;
 using MonkeyLoader.Resonite;
-
+using System.Reflection;
 using GenerationEvent = MonkeyLoader.Resonite.UI.Inspectors.InspectorMemberActionsMenuItemsGenerationEvent;
 
 namespace DynamicVariablePowerTools.ContextMenu
 {
     internal sealed partial class DynamicVariableMemberActions
     {
-        private static ButtonEventHandler GetDriveSyncRefFromVariable<T>(GenerationEvent eventData, SyncRef<T> syncRefTarget, string variable)
+        private static readonly MethodInfo _getDriveSyncRefWithCastFromVariableMethod = AccessTools.Method(typeof(DynamicVariableMemberActions), nameof(GetDriveSyncRefWithCastFromVariable));
+
+        private static ButtonEventHandler GetDriveSyncRefFromVariable<T>(GenerationEvent eventData, SyncRef<T> syncRefTarget, string variable, Type? variableType = null)
             where T : class, IWorldElement
+        {
+            if (variableType is null || variableType == typeof(T))
+            {
+                return (button, args) =>
+                {
+                    syncRefTarget.DriveFromVariable(variable);
+                    eventData.CloseContextMenu();
+                };
+            }
+
+            var getMethod = _getDriveSyncRefWithCastFromVariableMethod.MakeGenericMethod(typeof(T), variableType);
+            return (ButtonEventHandler)getMethod.Invoke(null, [eventData, syncRefTarget, variable])!;
+        }
+
+        private static ButtonEventHandler GetDriveSyncRefWithCastFromVariable<TTarget, TVariable>(GenerationEvent eventData, SyncRef<TTarget> syncRefTarget, string variable)
+                where TTarget : class, IWorldElement
+                where TVariable : class, IWorldElement
             => (button, args) =>
             {
-                syncRefTarget.DriveFromVariable(variable);
+                var cast = syncRefTarget.Slot.AttachComponent<ReferenceCast<TVariable, TTarget>>();
+                cast.Target.Target = syncRefTarget;
+                cast.Source.DriveFromVariable(variable);
+
                 eventData.CloseContextMenu();
             };
 
@@ -31,10 +55,13 @@ namespace DynamicVariablePowerTools.ContextMenu
                     eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(space, "")), DriveIcon, DriveColor)
                         .Button.LocalPressed += GetDriveSyncRefFromVariable(eventData, syncRefTarget, blankVariableName);
 
-                    foreach (var variable in space.GetVariableIdentities<T>().WithoutSharedConfigVariables())
+                    foreach (var variable in space.GetVariableIdentities().WithoutSharedConfigVariables())
                     {
+                        if (!variable.Type.IsAssignableFrom(syncRefTarget.TargetType) && !variable.Type.IsAssignableTo(syncRefTarget.TargetType))
+                            continue;
+
                         eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(variable)), DriveIcon, DriveColor)
-                            .Button.LocalPressed += GetDriveSyncRefFromVariable(eventData, syncRefTarget, variable.QualifiedName);
+                            .Button.LocalPressed += GetDriveSyncRefFromVariable(eventData, syncRefTarget, variable.QualifiedName, variable.Type);
                     }
                 });
             };
