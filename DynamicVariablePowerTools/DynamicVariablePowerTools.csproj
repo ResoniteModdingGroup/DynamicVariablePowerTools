@@ -1,4 +1,4 @@
-﻿<Project Sdk="Remora.Resonite.Sdk/2.3.1">
+﻿<Project Sdk="Remora.Resonite.Sdk/2.3.3">
   <PropertyGroup>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>DynamicVariablePowerTools</PackageId>
@@ -11,6 +11,8 @@
     <PackageProjectUrl>https://github.com/ResoniteModdingGroup/DynamicVariablePowerTools</PackageProjectUrl>
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
     <PackageTags>mod; mods; monkeyloader; resonite; contacts</PackageTags>
+
+    <MonkeyLoader_GamePacks_Resonite_Version>0.33.0</MonkeyLoader_GamePacks_Resonite_Version>
   </PropertyGroup>
   
   <ItemGroup>

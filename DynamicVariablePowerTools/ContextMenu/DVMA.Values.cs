@@ -7,6 +7,7 @@ namespace DynamicVariablePowerTools.ContextMenu
 {
     internal sealed partial class DynamicVariableMemberActions
     {
+        // TODO:
         private static ButtonEventHandler GetDriveFieldFromVariable<T>(GenerationEvent eventData, IField<T> fieldTarget, string variable)
             => (button, args) =>
             {
@@ -29,7 +30,7 @@ namespace DynamicVariablePowerTools.ContextMenu
                     eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(space, "")), DriveIcon, DriveColor)
                         .Button.LocalPressed += GetDriveFieldFromVariable(eventData, fieldTarget, blankVariableName);
 
-                    foreach (var variable in space.GetVariableIdentities<T>().RemoveSharedConfigVariables())
+                    foreach (var variable in space.GetVariableIdentities<T>().WithoutSharedConfigVariables())
                     {
                         eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(variable)), DriveIcon, DriveColor)
                             .Button.LocalPressed += GetDriveFieldFromVariable(eventData, fieldTarget, variable.QualifiedName);

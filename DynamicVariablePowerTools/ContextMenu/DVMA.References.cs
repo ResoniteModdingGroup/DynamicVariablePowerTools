@@ -31,7 +31,7 @@ namespace DynamicVariablePowerTools.ContextMenu
                     eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(space, "")), DriveIcon, DriveColor)
                         .Button.LocalPressed += GetDriveSyncRefFromVariable(eventData, syncRefTarget, blankVariableName);
 
-                    foreach (var variable in space.GetVariableIdentities<T>().RemoveSharedConfigVariables())
+                    foreach (var variable in space.GetVariableIdentities<T>().WithoutSharedConfigVariables())
                     {
                         eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(variable)), DriveIcon, DriveColor)
                             .Button.LocalPressed += GetDriveSyncRefFromVariable(eventData, syncRefTarget, variable.QualifiedName);

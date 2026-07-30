@@ -3,7 +3,6 @@ using FrooxEngine;
 using HarmonyLib;
 using MonkeyLoader;
 using MonkeyLoader.Resonite;
-using MonkeyLoader.Resonite.Configuration;
 using System.Reflection;
 
 using GenerationEvent = MonkeyLoader.Resonite.UI.Inspectors.InspectorMemberActionsMenuItemsGenerationEvent;
