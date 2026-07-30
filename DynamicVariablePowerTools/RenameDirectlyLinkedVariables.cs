@@ -34,7 +34,7 @@ namespace DynamicVariablePowerTools
             var currentNamePrefix = $"{currentName}/";
             var newNamePrefix = $"{newName}/";
 
-            foreach (var dynVar in space.GetLinkedVariables(includeLocal: false, excludeDisabled: true))
+            foreach (var dynVar in space.GetAllLinkedVariables())
             {
                 try
                 {

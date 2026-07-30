@@ -1,5 +1,4 @@
-﻿using Elements.Core;
-using FrooxEngine;
+﻿using FrooxEngine;
 using FrooxEngine.ProtoFlux;
 using MonkeyLoader.Resonite;
 using MonkeyLoader.Resonite.UI.Inspectors;
@@ -26,12 +25,6 @@ namespace DynamicVariablePowerTools
             );
         }
 
-        private static Type GetDynVarType(IDynamicVariable dynVar)
-            => dynVar.GetType().GetGenericArgumentsFromInterface(typeof(IDynamicVariable<>))[0];
-
-        private static bool IsDynVarOfType(IDynamicVariable dynVar, Type innerType)
-            => GetDynVarType(dynVar) == innerType;
-
         private static void RenameDynVar(IDynamicVariable dynVar, string newName)
         {
             if (!dynVar.TryGetLinkedSpace(out var linkedSpace))
@@ -41,15 +34,10 @@ namespace DynamicVariablePowerTools
                 return;
             }
 
-            var dynVarType = GetDynVarType(dynVar);
-            var currentFullName = dynVar.VariableName;
-            DynamicVariableHelper.ParsePath(currentFullName, out var currentSpaceName, out var currentVariableName);
+            var oldIdentity = new DynamicVariableIdentity(linkedSpace, dynVar.GetVariableType(), dynVar.VariableName);
+            var oldQualifiedName = oldIdentity.QualifiedName;
 
-            Predicate<IDynamicVariable> predicate = linkedSpace.OnlyDirectBinding
-                ? (it => it.VariableName == currentFullName && IsDynVarOfType(it, dynVarType))
-                : (it => (it.VariableName == currentFullName || it.VariableName == currentVariableName) && IsDynVarOfType(it, dynVarType));
-
-            foreach (var linkedVar in linkedSpace.GetLinkedVariables(predicate, true))
+            foreach (var linkedVar in linkedSpace.GetAllLinkedVariablesMatching(oldIdentity))
             {
                 // TODO: Move to helper method
                 var nameField = ((Worker)linkedVar).TryGetField<string>("VariableName") ?? ((Worker)linkedVar).TryGetField<string>("_variableName");
@@ -70,15 +58,11 @@ namespace DynamicVariablePowerTools
             }
 
             // Only attempt rename when the new name is directly binding ("space/name")
-            if (RenameConfig.Instance.ChangeProtoFluxStringInputs && currentSpaceName != null)
+            if (RenameConfig.Instance.ChangeProtoFluxStringInputs)
             {
-                linkedSpace.Slot.ForeachComponentInChildren<IInput<string>>(stringInput =>
-                {
-                    if (stringInput.Value != currentFullName)
-                        return;
-
-                    stringInput.Value = newName;
-                }, includeLocal: true, cacheItems: true);
+                linkedSpace.Slot.ForeachComponentInChildren<IInput<string>>(
+                    stringInput => stringInput.Value = stringInput.Value.Replace(oldQualifiedName, newName),
+                    includeLocal: true, cacheItems: true);
             }
         }
     }
