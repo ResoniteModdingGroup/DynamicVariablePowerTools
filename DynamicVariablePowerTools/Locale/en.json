@@ -24,6 +24,10 @@
     "DynamicVariablePowerTools.Config.RenameOptions.Description": "Options for the renaming of dynamic variables and their spaces.",
     "DynamicVariablePowerTools.Config.RenameOptions.ChangeProtoFluxStringInputs.Name": "Change ProtoFlux String Inputs",
     "DynamicVariablePowerTools.Config.RenameOptions.ChangeProtoFluxStringInputs.Description": "Search and rename ProtoFlux inputs with the old name in the form OldName/* (Experimental).",
+    "DynamicVariablePowerTools.Config.RenameOptions.ShowRenameDynamicVariable.Name": "Show Rename Dynamic Variable",
+    "DynamicVariablePowerTools.Config.RenameOptions.ShowRenameDynamicVariable.Description": "Show rename action on dynamic variable components.",
+    "DynamicVariablePowerTools.Config.RenameOptions.ShowRenameDynamicVariableSpace.Name": "Show Rename Dynamic Variable Space",
+    "DynamicVariablePowerTools.Config.RenameOptions.ShowRenameDynamicVariableSpace.Description": "Show rename action on DynamicVariableSpace components.",
 
     "DynamicVariablePowerTools.Config.DebugInfo.Name": "Debug Info",
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedVariablesList.Name": "Variable Definitions",

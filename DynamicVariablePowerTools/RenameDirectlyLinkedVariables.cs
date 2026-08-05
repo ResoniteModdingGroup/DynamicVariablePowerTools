@@ -1,6 +1,5 @@
 ﻿using FrooxEngine;
 using FrooxEngine.ProtoFlux;
-using HarmonyLib;
 using MonkeyLoader;
 using MonkeyLoader.Resonite;
 using MonkeyLoader.Resonite.UI.Inspectors;
@@ -20,7 +19,8 @@ namespace DynamicVariablePowerTools
                 space.SpaceName,
                 onRename: newName => RenameSpace(space, newName),
                 buttonText: this.GetLocaleString("Button"),
-                tooltipText: this.GetLocaleString("Tooltip")
+                tooltipText: this.GetLocaleString("Tooltip"),
+                RenameConfig.Instance.ShowRenameDynamicVariableSpace
             );
         }
 
