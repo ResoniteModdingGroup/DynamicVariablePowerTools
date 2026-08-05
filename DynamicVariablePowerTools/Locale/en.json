@@ -18,7 +18,7 @@
     "DynamicVariablePowerTools.RenameDynamicVariables.Description": "Adds a button to dynamic variable components in inspectors that allows renaming all linked instances of that variable.",
 
     "DynamicVariablePowerTools.DynamicVariableMemberActions.Name": "Dynamic Variable Member Actions",
-    "DynamicVariablePowerTools.DynamicVariableMemberActions.Description": "Adds options to set up dynamic variable components to the Member Actions context menu for fields in inspectors.",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Description": "Adds options to set up dynamic variable components to the Member Actions context menu for fields in inspectors. Uses the <i>Member Actions</i> settings.",
 
     "DynamicVariablePowerTools.Config.RenameOptions.Name": "Renaming",
     "DynamicVariablePowerTools.Config.RenameOptions.Description": "Options for the renaming of dynamic variables and their spaces.",
@@ -30,6 +30,12 @@
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedVariablesList.Description": "Adds a button to DynamicVariableSpace components in inspectors that allows generating a list of all dynamic variable definitions linked to that space.",
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedComponentHierarchy.Name": "Component Hierarchy",
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedComponentHierarchy.Description": "Adds a button to DynamicVariableSpace components in inspectors that allows generating a hierarchical list of all dynamic variable components linked to a space.",
+
+    "DynamicVariablePowerTools.Config.MemberActions.Name": "Member Actions",
+    "DynamicVariablePowerTools.Config.MemberActions.AllowDowncastToDrive.Name": "Allow Downcast to Drive",
+    "DynamicVariablePowerTools.Config.MemberActions.AllowDowncastToDrive.Description": "Allow downcasting the type of the dynamic variable to the type required by the target reference.<size=50%><br/><br/></size>Downcasting means that the variable's type is more specific than the target reference's - for example assigning a SkinnedMeshRenderer variable to a MeshRenderer reference. This will always be successful.",
+    "DynamicVariablePowerTools.Config.MemberActions.AllowUpcastToDrive.Name": "Allow Upcast to Drive",
+    "DynamicVariablePowerTools.Config.MemberActions.AllowUpcastToDrive.Description": "Allow upcasting the type of the dynamic variable to the type required by the target reference.<size=50%><br/><br/></size>Upcasting means that the variable's type is less specific than the target reference's - for example trying to assign a MeshRenderer variable to a SkinnedMeshRenderer reference. This will only work if the current value of the dynamic variable is actually a SkinnedMeshRenderer; otherwise, the target reference will be set to <i>null</i>.",
 
     "DynamicVariablePowerTools.EnableLinkedVariablesList.Button": "Output Variable Definitions",
     "DynamicVariablePowerTools.EnableLinkedVariablesList.Tooltip": "Generates a list of all dynamic variable definitions linked to this space in the <i>Output</i> field.",
