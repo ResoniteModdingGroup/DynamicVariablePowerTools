@@ -1,6 +1,9 @@
 ﻿using FrooxEngine;
 using FrooxEngine.ProtoFlux;
+using MonkeyLoader.Components;
+using MonkeyLoader.Configuration;
 using MonkeyLoader.Resonite;
+using MonkeyLoader.Resonite.Configuration;
 using MonkeyLoader.Resonite.UI.Inspectors;
 
 namespace DynamicVariablePowerTools
@@ -21,7 +24,8 @@ namespace DynamicVariablePowerTools
                 nameField,
                 onRename: newName => RenameDynVar(dynVar, newName),
                 buttonText: this.GetLocaleString("Button"),
-                tooltipText: this.GetLocaleString("Tooltip")
+                tooltipText: this.GetLocaleString("Tooltip"),
+                RenameConfig.Instance.ShowRenameDynamicVariable
             );
         }
 

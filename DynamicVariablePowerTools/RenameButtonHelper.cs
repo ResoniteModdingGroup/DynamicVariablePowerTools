@@ -2,15 +2,19 @@
 using FrooxEngine;
 using FrooxEngine.UIX;
 using MonkeyLoader.Resonite;
+using MonkeyLoader.Resonite.Configuration;
 using MonkeyLoader.Resonite.UI;
 
 namespace DynamicVariablePowerTools
 {
     internal static class RenameButtonHelper
     {
-        internal static void BuildRenameUI(this UIBuilder builder, IField<string> nameField, Action<string> onRename, LocaleString buttonText, LocaleString tooltipText)
+        internal static void BuildRenameUI(this UIBuilder builder, IField<string> nameField, Action<string> onRename, LocaleString buttonText, LocaleString tooltipText, ConfigKeySessionShare<bool> enabledShare)
         {
-            var layout = builder.HorizontalLayout(4).Slot.DestroyWhenLocalUserLeaves();
+            var layoutSlot = builder.HorizontalLayout(4).Slot;
+            enabledShare.DriveFromVariable(layoutSlot.ActiveSelf_Field);
+            layoutSlot.DestroyWhenLocalUserLeaves();
+
             builder.PushStyle();
             var style = builder.Style;
 
@@ -19,7 +23,7 @@ namespace DynamicVariablePowerTools
 
             void ChangedListener(object _) => newNameField.Text.Content.Value = nameField.Value;
             nameField.Changed += ChangedListener;
-            layout.Destroyed += _ => nameField.Changed -= ChangedListener;
+            layoutSlot.Destroyed += _ => nameField.Changed -= ChangedListener;
 
             style.FlexibleWidth = -1;
             style.MinWidth = 256;
