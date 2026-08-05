@@ -1,5 +1,4 @@
-﻿using EnumerableToolkit;
-using FrooxEngine;
+﻿using FrooxEngine;
 using HarmonyLib;
 using MonkeyLoader.Resonite;
 using System.Reflection;
@@ -14,7 +13,7 @@ namespace DynamicVariablePowerTools.ContextMenu
         private static ButtonEventHandler GetDriveSyncRefFromVariable<T>(GenerationEvent eventData, SyncRef<T> syncRefTarget, string variable, Type? variableType = null)
             where T : class, IWorldElement
         {
-            if (variableType is null || variableType == typeof(T))
+            if (variableType is null || variableType == syncRefTarget.TargetType)
             {
                 return (button, args) =>
                 {
@@ -23,7 +22,7 @@ namespace DynamicVariablePowerTools.ContextMenu
                 };
             }
 
-            var getMethod = _getDriveSyncRefWithCastFromVariableMethod.MakeGenericMethod(typeof(T), variableType);
+            var getMethod = _getDriveSyncRefWithCastFromVariableMethod.MakeGenericMethod(syncRefTarget.TargetType, variableType);
             return (ButtonEventHandler)getMethod.Invoke(null, [eventData, syncRefTarget, variable])!;
         }
 
@@ -57,8 +56,24 @@ namespace DynamicVariablePowerTools.ContextMenu
 
                     foreach (var variable in space.GetVariableIdentities().WithoutSharedConfigVariables())
                     {
-                        if (!variable.Type.IsAssignableFrom(syncRefTarget.TargetType) && !variable.Type.IsAssignableTo(syncRefTarget.TargetType))
+                        var couldDowncast = variable.Type.IsAssignableTo(syncRefTarget.TargetType);
+                        var couldUpcast = syncRefTarget.TargetType.IsAssignableTo(variable.Type);
+
+                        // Variable and target are completely incompatible
+                        if (!couldDowncast && !couldUpcast)
                             continue;
+
+                        // Variable and target are not the same but (potentially) compatible
+                        if (couldDowncast ^ couldUpcast)
+                        {
+                            // Variable is more derived than target
+                            if (!ConfigSection.AllowDowncastToDrive && couldDowncast)
+                                continue;
+
+                            // Variable is less derived than target
+                            if (!ConfigSection.AllowUpcastToDrive && couldUpcast)
+                                continue;
+                        }
 
                         eventData.ContextMenu.AddItem(Instance.GetLocaleString("Drive.FromVariable", "variable", GetDisplayName(variable)), DriveIcon, DriveColor)
                             .Button.LocalPressed += GetDriveSyncRefFromVariable(eventData, syncRefTarget, variable.QualifiedName, variable.Type);

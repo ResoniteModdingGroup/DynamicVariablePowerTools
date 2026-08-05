@@ -10,7 +10,7 @@ using GenerationEvent = MonkeyLoader.Resonite.UI.Inspectors.InspectorMemberActio
 namespace DynamicVariablePowerTools.ContextMenu
 {
     internal sealed partial class DynamicVariableMemberActions
-        : ResoniteAsyncEventHandlerMonkey<DynamicVariableMemberActions, GenerationEvent>
+        : ConfiguredResoniteAsyncEventHandlerMonkey<DynamicVariableMemberActions, MemberActionsConfig, GenerationEvent>
     {
         private static readonly Dictionary<Type, Action<GenerationEvent>> _actionOfferersByType = new()
         {

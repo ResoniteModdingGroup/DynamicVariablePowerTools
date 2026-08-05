@@ -18,7 +18,7 @@
     "DynamicVariablePowerTools.RenameDynamicVariables.Description": "Fügt einen Knopf zu dynamischen Variablen Komponenten in Inspektoren hinzu, der es erlaubt, alle verbundenen Instanzen der Variable umzubennen.",
 
     "DynamicVariablePowerTools.DynamicVariableMemberActions.Name": "Member Actions für dynamische Variablen",
-    "DynamicVariablePowerTools.DynamicVariableMemberActions.Description": "Fügt Optionen, um dynamische Variablen Komponenten aufzusetzen, zu den Member Actions von Feldern in Inspektoren hinzu.",
+    "DynamicVariablePowerTools.DynamicVariableMemberActions.Description": "Fügt Optionen, um dynamische Variablen Komponenten aufzusetzen, zu den Member Actions von Feldern in Inspektoren hinzu. Nutzt die <i>Member Actions</i> Einstellungen.",
 
     "DynamicVariablePowerTools.Config.RenameOptions.Name": "Umbenennen",
     "DynamicVariablePowerTools.Config.RenameOptions.Description": "Optionen für das Umbenennen von dynamischen Variablen und ihren Spaces.",
@@ -30,6 +30,12 @@
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedVariablesList.Description": "Fügt einen Knopf zu DynamicVariableSpace-Komponenten in Inspektoren hinzu, der es erlaubt, eine Liste aller mit dem Space verbundenen Definitionen dynamischer Variablen zu generieren.",
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedComponentHierarchy.Name": "Komponentenhierarchie",
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedComponentHierarchy.Description": "Fügt einen Knopf zu DynamicVariableSpace-Komponenten in Inspektoren hinzu, der es erlaubt, eine hierarchische Liste aller mit dem Space verbundenen dynamischer Variablenkomponenten zu generieren.",
+
+    "DynamicVariablePowerTools.Config.MemberActions.Name": "Member Actions",
+    "DynamicVariablePowerTools.Config.MemberActions.AllowDowncastToDrive.Name": "Abwärtskonvertierung für Drive erlauben",
+    "DynamicVariablePowerTools.Config.MemberActions.AllowDowncastToDrive.Description": "Erlaubt es, den Typ der dynamischen Variable abwärts zum für die Zielreferenz gebrauchten Typ zu konvertieren.<size=50%><br/><br/></size>Abwärts Konvertieren heißt, dass der Typ der Variable spezifischer als der der Zielreferenz ist - beispielsweise das Zuweisen einer SkinnedMeshRenderer-Variable zu einer MeshRenderer-Referenz. Dies wird immer erfolgreich sein.",
+    "DynamicVariablePowerTools.Config.MemberActions.AllowUpcastToDrive.Name": "Aufwärtskonvertierung für Drive erlauben",
+    "DynamicVariablePowerTools.Config.MemberActions.AllowUpcastToDrive.Description": "Erlaubt es, den Typ der dynamischen Variable aufwärts zum für die Zielreferenz gebrauchten Typ zu konvertieren.<size=50%><br/><br/></size>Aufwärts Konvertieren heißt, dass der Typ der Variable weniger spezifisch als der der Zielreferenz ist - beispielsweise der Versuch, eine MeshRenderer-Variable einer SkinnedMeshRenderer-Referenz zuzuweisen. Dies wird nur erfolgreich sein, wenn der aktuelle Wert der dynamischen Variable tatsächlich ein SkinnedMeshRenderer ist; ansonsten wird die Zielreferenz auf <i>null</i> gesetzt.",
 
     "DynamicVariablePowerTools.EnableLinkedVariablesList.Button": "Variablendefinitionen ausgeben",
     "DynamicVariablePowerTools.EnableLinkedVariablesList.Tooltip": "Generiert eine Liste aller mit dem Space verbundenen Definitioner dynamischer Variablen im <i>Output</i> Feld.",
