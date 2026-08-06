@@ -31,10 +31,11 @@ namespace DynamicVariablePowerTools
             if (!((IDynamicVariable)eventData.Worker).TryGetLinkedSpace(out var space))
                 return;
 
-            // Todo: add position drive
             var horizontalLayout = eventData.UI.HorizontalLayout(4).Slot;
-            _enabledShare.DriveFromVariable(horizontalLayout.ActiveSelf_Field);
             eventData.UI.FitContent(SizeFit.MinSize, SizeFit.Disabled);
+
+            _enabledShare.DriveFromVariable(horizontalLayout.ActiveSelf_Field);
+            DebugInfoConfig.Instance.OpenLinkedSpaceOffset.DriveFromVariable(horizontalLayout.OrderOffset_Field);
 
             InspectorUIHelper.BuildHeaderOpenParentButtons(eventData.UI, space);
 

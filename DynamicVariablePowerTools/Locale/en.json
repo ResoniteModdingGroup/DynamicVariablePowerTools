@@ -34,6 +34,8 @@
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedVariablesList.Description": "Adds a button to DynamicVariableSpace components in inspectors that allows generating a list of all dynamic variable definitions linked to that space.",
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedComponentHierarchy.Name": "Component Hierarchy",
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedComponentHierarchy.Description": "Adds a button to DynamicVariableSpace components in inspectors that allows generating a hierarchical list of all dynamic variable components linked to a space.",
+    "DynamicVariablePowerTools.Config.DebugInfo.OpenLinkedSpaceOffset.Name": "Open Linked Space Offset",
+    "DynamicVariablePowerTools.Config.DebugInfo.OpenLinkedSpaceOffset.Description": "The Order Offset of the buttons to open the linked dynamic variable space on Inspector Headers of dynamic variable components. Higher is further right.",
 
     "DynamicVariablePowerTools.Config.MemberActions.Name": "Member Actions",
     "DynamicVariablePowerTools.Config.MemberActions.AllowDowncastToDrive.Name": "Allow Downcast to Drive",
