@@ -34,6 +34,8 @@
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedVariablesList.Description": "Fügt einen Knopf zu DynamicVariableSpace-Komponenten in Inspektoren hinzu, der es erlaubt, eine Liste aller mit dem Space verbundenen Definitionen dynamischer Variablen zu generieren.",
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedComponentHierarchy.Name": "Komponentenhierarchie",
     "DynamicVariablePowerTools.Config.DebugInfo.EnableLinkedComponentHierarchy.Description": "Fügt einen Knopf zu DynamicVariableSpace-Komponenten in Inspektoren hinzu, der es erlaubt, eine hierarchische Liste aller mit dem Space verbundenen dynamischer Variablenkomponenten zu generieren.",
+    "DynamicVariablePowerTools.Config.DebugInfo.OpenLinkedSpaceOffset.Name": "Verbunden-Space-Öffnen Offset",
+    "DynamicVariablePowerTools.Config.DebugInfo.OpenLinkedSpaceOffset.Description": "Das Order Offset der Knöpfe bei den Inspektor-Kopfzeilen von dynamischen Variablen Komponenten, die den verbundenen DynamicVariableSpace öffnen. Höher ist weiter rechts.",
 
     "DynamicVariablePowerTools.Config.MemberActions.Name": "Member Actions",
     "DynamicVariablePowerTools.Config.MemberActions.AllowDowncastToDrive.Name": "Abwärtskonvertierung für Drive erlauben",
